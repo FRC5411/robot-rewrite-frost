@@ -66,12 +66,12 @@ public class DriveSimIO implements DriveIOInterface{
     }
 
     public void telemetry() {
-        chassisTelemetry();
         moduleTelemetry();
+        chassisTelemetry();
     }
 
     public void moduleTelemetry() {
-        for(int i = 0; i <= Simulation.modules.length - 1; i++) {
+        for(int i = 0; i < Simulation.modules.length; i++) {
             Simulation.modules[i].setTelemetry(i);
         }
 
@@ -89,5 +89,11 @@ public class DriveSimIO implements DriveIOInterface{
 
     public void putRobotOnField(Pose2d pose) {
         Objects.fieldSim.setRobotPose(pose);
+    }
+
+    public void update() {
+        for(int i = 0; i < Simulation.modules.length -1 ; i++) {
+            Simulation.modules[i].update(0.2);
+        }
     }
 }

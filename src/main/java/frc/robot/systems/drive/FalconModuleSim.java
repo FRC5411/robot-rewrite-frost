@@ -16,7 +16,7 @@ public class FalconModuleSim implements SwerveModuleInterface{
     private double turnPosRadians = 0;
     private PIDController turnPIDController;
     private PIDController drivePIDController;
-    private SwerveModuleState debugState;
+    private SwerveModuleState debugState = new SwerveModuleState();
 
     public FalconModuleSim(FlywheelSim driveMotorSim, FlywheelSim turnMotorSim) {
         this.driveMotorSim = driveMotorSim;

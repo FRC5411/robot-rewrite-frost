@@ -7,10 +7,11 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.systems.drive.DriveVars.Objects;
+import frc.robot.systems.drive.DriveVars.Simulation;
 import frc.robot.RobotStates;
 
 public class DriveSubsystem extends SubsystemBase {
-    public DriveIOInterface driveIO;
+    public DriveSimIO driveIO;
 
     public DriveSubsystem() {
         driveIO = new DriveSimIO();
@@ -51,12 +52,13 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Command getAuton() {
-        return Objects.swerveUtils.followPath("New Path", RobotStates.sEventMap, true, this);
+        return Simulation.swerveUtilsSim.followPath("New Path", RobotStates.sEventMap, true, this);
     }
 
     @Override
     public void periodic() {
-        Objects.swerveUtils.updateOdometry();
+        driveIO.update();
+        Simulation.swerveUtilsSim.updateOdometry();
         driveIO.telemetry();
         driveIO.putRobotOnField(driveIO.getPose());
     }

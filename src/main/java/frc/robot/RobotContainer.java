@@ -15,9 +15,9 @@ public class RobotContainer {
 
     robotDrive.setDefaultCommand(
         robotDrive.driveCMD(
-            () -> - ControllerVars.xboxController.getLeftY() * DriveVars.Constants.kMaxLinSpeedMeters,
-            () -> ControllerVars.xboxController.getLeftX() * DriveVars.Constants.kMaxLinSpeedMeters,
-            () -> ControllerVars.xboxController.getRightX() * DriveVars.Constants.kMaxRotMeters,
+            () -> - deadzone(ControllerVars.xboxController.getLeftY()) * DriveVars.Constants.kMaxLinSpeedMeters,
+            () -> deadzone(ControllerVars.xboxController.getLeftX()) * DriveVars.Constants.kMaxLinSpeedMeters,
+            () -> deadzone(ControllerVars.xboxController.getRightX()) * DriveVars.Constants.kMaxRotMeters,
             () -> RobotStates.sField
     ));
 
@@ -31,7 +31,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return robotDrive.getAuton();
   }
 
     public static DriverStation.Alliance getDriverAlliance() {
@@ -44,6 +44,14 @@ public class RobotContainer {
 
   public static RobotStates.positions getPosition() {
       return RobotStates.positions.Floor;
+  }
+
+  public double deadzone(double val) {
+    if (Math.abs(val) < 0.1) {
+      return 0;
+    } else {
+      return val;
+    }
   }
 
 }

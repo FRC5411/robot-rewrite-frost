@@ -116,7 +116,7 @@ public final class DriveVars {
         public static final int kBLAzimuthID = 23;
         public static final int kBRAzimuthID = 24;
 
-        public static final double kTranslationKp = 3.75;//3.25;//2.75;//2.5;//2.1;//2;//0.018;//0.03;//0.004 0.001
+        public static final double kTranslationKp = 1000;//3.25;//2.75;//2.5;//2.1;//2;//0.018;//0.03;//0.004 0.001
         public static final double kTranslationKi = 0;
         public static final double kTranslationKd = 0;
 
@@ -141,23 +141,23 @@ public final class DriveVars {
 
     public static class Simulation {
         public static final FalconModuleSim TopLeftSim = new FalconModuleSim(
-            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kDriveGearRatio, 0),
-            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kAzimuthGearRatio, 0)
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kDriveGearRatio, 0.1),
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kAzimuthGearRatio, 1)
         );
 
         public static final FalconModuleSim TopRightSim = new FalconModuleSim(
-            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kDriveGearRatio, 0),
-            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kAzimuthGearRatio, 0)
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kDriveGearRatio, 0.1),
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kAzimuthGearRatio, 1)
         );
 
         public static final FalconModuleSim BottomLeftSim = new FalconModuleSim(
-            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kDriveGearRatio, 0),
-            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kAzimuthGearRatio, 0)
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kDriveGearRatio, 0.1),
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kAzimuthGearRatio, 1)
         );
 
         public static final FalconModuleSim BottomRightSim = new FalconModuleSim(
-            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kDriveGearRatio, 0),
-            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kAzimuthGearRatio, 0)
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kDriveGearRatio, 0.1),
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kAzimuthGearRatio, 1)
         );
 
         public static final FalconModuleSim[] modules = {

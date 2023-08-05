@@ -89,10 +89,9 @@ public class SwerveUtils {
 
     // No need for input pulls straignt from passed in odules
     public void updateOdometry() {
-        for(int i = 0; i <= positions.length - 1; i++) {
+        for(int i = 0; i < positions.length; i++) {
             double pos = modules[i].getDriveMeters() * modules[i].getAnshulFactor();
             positions[i] = new SwerveModulePosition(pos, modules[i].getAngleRads());
-            i++;
         }
         odometry.update(getRotation2d(), positions);
     }
