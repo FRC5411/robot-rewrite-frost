@@ -10,10 +10,10 @@ import frc.robot.systems.drive.DriveVars.Objects;
 import frc.robot.RobotStates;
 
 public class DriveSubsystem extends SubsystemBase {
-    public DriveIO driveIO;
+    public DriveIOInterface driveIO;
 
     public DriveSubsystem() {
-        driveIO = new DriveIO();
+        driveIO = new DriveSimIO();
     }
 
     public Command driveCMD(DoubleSupplier x, DoubleSupplier y, DoubleSupplier z, BooleanSupplier field) {
@@ -52,5 +52,12 @@ public class DriveSubsystem extends SubsystemBase {
 
     public Command getAuton() {
         return Objects.swerveUtils.followPath("New Path", RobotStates.sEventMap, true, this);
+    }
+
+    @Override
+    public void periodic() {
+        Objects.swerveUtils.updateOdometry();
+        driveIO.telemetry();
+        driveIO.putRobotOnField(driveIO.getPose());
     }
 }

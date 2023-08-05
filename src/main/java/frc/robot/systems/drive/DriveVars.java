@@ -4,13 +4,13 @@ import com.pathplanner.lib.PathConstraints;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
-import frc.robot.utils.FalconSwerveModule;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.utils.SwerveUtils;
 import frc.robot.utils.HolonomicDrive;
 import edu.wpi.first.math.controller.PIDController;
-import java.util.HashMap;
-import edu.wpi.first.wpilibj2.command.Command;
 
 public final class DriveVars {
     public static class Objects {
@@ -64,6 +64,8 @@ public final class DriveVars {
 
         public static final SwerveUtils swerveUtils = 
             new SwerveUtils(tPID, rPID, swerveDrive);
+
+        public static final Field2d fieldSim = new Field2d();
     }
 
     public static class Constants {
@@ -72,6 +74,7 @@ public final class DriveVars {
         public static final double kWheelDiameterMeters = 0.1016;
         public static final double kWheelPerimeterMeters = kWheelDiameterMeters * Math.PI;
         public static final double kDriveGearRatio = 6.75;
+        public static final double kAzimuthGearRatio = 12.8;
 
         public static final double kFLEncOffset = -313.506+0.5;
         public static final double kFREncOffset = -69.082+0.5;
@@ -131,10 +134,47 @@ public final class DriveVars {
 
         public static final PathConstraints kAlignConstraints = new PathConstraints(2, 1);
 
-        public static double x = 0;
-        public static double y = 0;
-        public static double theta = 0;
+        public static double xSim = 0;
+        public static double ySim = 0;
+        public static double thetaSim = 0;
+    }
 
-        public static HashMap<String, Command> eventMap = new HashMap<String, Command>();
+    public static class Simulation {
+        public static final FalconModuleSim TopLeftSim = new FalconModuleSim(
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kDriveGearRatio, 0),
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kAzimuthGearRatio, 0)
+        );
+
+        public static final FalconModuleSim TopRightSim = new FalconModuleSim(
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kDriveGearRatio, 0),
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kAzimuthGearRatio, 0)
+        );
+
+        public static final FalconModuleSim BottomLeftSim = new FalconModuleSim(
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kDriveGearRatio, 0),
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kAzimuthGearRatio, 0)
+        );
+
+        public static final FalconModuleSim BottomRightSim = new FalconModuleSim(
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kDriveGearRatio, 0),
+            new FlywheelSim(DCMotor.getFalcon500(1), Constants.kAzimuthGearRatio, 0)
+        );
+
+        public static final FalconModuleSim[] modules = {
+            TopLeftSim,
+            TopRightSim,
+            BottomLeftSim,
+            BottomRightSim
+        };
+
+        public static final HolonomicDrive swerveDriveSim = new HolonomicDrive(
+            modules,
+            Objects.gyro,
+            Objects.kinematics,
+            Constants.kMaxLinSpeedMeters
+        );
+
+        public static final SwerveUtils swerveUtilsSim = 
+            new SwerveUtils(Objects.tPID, Objects.rPID, swerveDriveSim);
     }
 }
