@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class RobotContainer {
   public RobotContainer() {
@@ -17,4 +18,13 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
   }
+
+    public static DriverStation.Alliance getDriverAlliance() {
+      // What to do for competition
+      //return DriverStation.getAlliance();
+
+      // What to do for testing
+      return DriverStation.Alliance.Red;
+  }
+
 }
