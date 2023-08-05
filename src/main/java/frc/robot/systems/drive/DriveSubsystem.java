@@ -51,6 +51,6 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Command getAuton() {
-        return Objects.swerveUtils.followPath("Holonomic path", RobotStates.sEventMap, true, this);
+        return Objects.swerveUtils.followPath("New Path", RobotStates.sEventMap, true, this);
     }
 }
