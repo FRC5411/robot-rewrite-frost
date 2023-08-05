@@ -13,7 +13,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 /** Add your docs here. */
 public class IntakeIO {
-   public void closeGrip() {
+
+  public IntakeIO() {}
+
+  public void closeGrip() {
     Objects.kClaw.set(Value.kForward);
   }
 
