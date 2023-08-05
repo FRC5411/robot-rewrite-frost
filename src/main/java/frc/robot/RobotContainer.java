@@ -27,4 +27,8 @@ public class RobotContainer {
       return DriverStation.Alliance.Red;
   }
 
+  public static RobotStates.positions getPosition() {
+      return RobotStates.positions.Floor;
+  }
+
 }
