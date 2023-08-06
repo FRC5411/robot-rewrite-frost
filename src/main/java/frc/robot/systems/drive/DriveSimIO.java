@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class DriveSimIO implements DriveIOInterface{
 
@@ -92,8 +94,14 @@ public class DriveSimIO implements DriveIOInterface{
     }
 
     public void update() {
-        for(int i = 0; i < Simulation.modules.length -1 ; i++) {
+        for(int i = 0; i < Simulation.modules.length - 1 ; i++) {
             Simulation.modules[i].update(0.2);
         }
+
+        Simulation.swerveUtilsSim.updateOdometry();
+    }
+
+    public Command getAuton(String path, boolean useColor, Subsystem subsystem) {
+        return Simulation.swerveUtilsSim.followPath(path, RobotStates.sEventMap, useColor, subsystem);
     }
 }

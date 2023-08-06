@@ -6,22 +6,21 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.systems.drive.DriveVars.Objects;
-import frc.robot.systems.drive.DriveVars.Simulation;
+import frc.robot.RobotContainer;
 import frc.robot.RobotStates;
 
 public class DriveSubsystem extends SubsystemBase {
-    public DriveSimIO driveIO;
+    public DriveSimIO IO;
 
     public DriveSubsystem() {
-        driveIO = new DriveSimIO();
+        IO = new DriveSimIO();
     }
 
     public Command driveCMD(DoubleSupplier x, DoubleSupplier y, DoubleSupplier z, BooleanSupplier field) {
         return new FunctionalCommand(
             () -> {},
             () -> {
-                driveIO.swerveDrive(x.getAsDouble(), y.getAsDouble(), z.getAsDouble(), field.getAsBoolean());
+                IO.swerveDrive(x.getAsDouble(), y.getAsDouble(), z.getAsDouble(), field.getAsBoolean());
             },
             interrupted -> {}, 
             () -> false,
@@ -32,7 +31,7 @@ public class DriveSubsystem extends SubsystemBase {
       return new FunctionalCommand(
           () -> {},
           () -> {
-            driveIO.autoBalance();
+            IO.autoBalance();
           },
           interrupted -> {}, 
           () -> false,
@@ -40,26 +39,25 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public Command resetPoseCMD(Pose2d pose) {
-        return new InstantCommand(() -> driveIO.resetPose(pose), this);
+        return new InstantCommand(() -> IO.resetPose(pose), this);
     }
 
     public Command toggleFieldCMD() {
-        return new InstantCommand(() -> driveIO.toggleField(), this);
+        return new InstantCommand(() -> IO.toggleField(), this);
     }
 
     public Command xLockCMD() {
-        return new InstantCommand(() -> driveIO.xLock(), this);
+        return new InstantCommand(() -> IO.xLock(), this);
     }
 
     public Command getAuton() {
-        return Simulation.swerveUtilsSim.followPath("New Path", RobotStates.sEventMap, true, this);
+        return IO.getAuton(RobotContainer.getAutonPath(), RobotStates.sUseColor, this);
     }
 
     @Override
     public void periodic() {
-        driveIO.update();
-        Simulation.swerveUtilsSim.updateOdometry();
-        driveIO.telemetry();
-        driveIO.putRobotOnField(driveIO.getPose());
+        IO.update();
+        IO.telemetry();
+        IO.putRobotOnField(IO.getPose());
     }
 }

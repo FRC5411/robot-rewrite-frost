@@ -57,9 +57,9 @@ public final class DriveVars {
 
         public static final PIDController rPID = 
             new PIDController(
-                Constants.kTranslationKp,
-                Constants.kTranslationKi,
-                Constants.kTranslationKd
+                Constants.kRotationKp,
+                Constants.kRotationKi,
+                Constants.kRotationKd
             );
 
         public static final SwerveUtils swerveUtils = 
@@ -116,7 +116,7 @@ public final class DriveVars {
         public static final int kBLAzimuthID = 23;
         public static final int kBRAzimuthID = 24;
 
-        public static final double kTranslationKp = 1000;//3.25;//2.75;//2.5;//2.1;//2;//0.018;//0.03;//0.004 0.001
+        public static final double kTranslationKp = 3.75;//3.25;//2.75;//2.5;//2.1;//2;//0.018;//0.03;//0.004 0.001
         public static final double kTranslationKi = 0;
         public static final double kTranslationKd = 0;
 
@@ -124,9 +124,9 @@ public final class DriveVars {
         public static final double KTranslationILower = 0;
         public static final double kTranslationIUpper = 0;
 
-        public static final double kTotationKp = 6.25;//12.5;//15;//0.00005
-        public static final double kTotationKi = 0;
-        public static final double kTotationKd = 0;
+        public static final double kRotationKp = 6.25;//12.5;//15;//0.00005
+        public static final double kRotationKi = 0;
+        public static final double kRotationKd = 0;
 
         public static final double kRotationTolerance = 0;
         public static final double KRotationILower = 0;
