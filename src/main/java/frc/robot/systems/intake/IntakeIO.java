@@ -17,19 +17,19 @@ public class IntakeIO {
   public IntakeIO() {}
 
   public void closeGrip() {
-    Objects.kClaw.set(Value.kForward);
+    Objects.claw.set(Value.kForward);
   }
 
   /** Open */
   public void openGrip() {
-    Objects.kClaw.set(Value.kReverse);
+    Objects.claw.set(Value.kReverse);
   }
 
   public void toggle () {
-    if (Objects.kClaw.get() == Value.kReverse) {
-      Objects.kClaw.set(Value.kForward);
+    if (Objects.claw.get() == Value.kReverse) {
+      Objects.claw.set(Value.kForward);
     } else {
-      Objects.kClaw.set(Value.kReverse);
+      Objects.claw.set(Value.kReverse);
     }
   }
 
@@ -75,19 +75,19 @@ public class IntakeIO {
 
   public void periodic() {
     if ( DriverStation.isEnabled() || DriverStation.isAutonomousEnabled() ) {
-      Objects.kSpinnerLeft.set(RobotStates.sIntakeSpeed);
-      Objects.kSpinnerRight.set(RobotStates.sIntakeSpeed);
+      Objects.spinnerLeft.set(RobotStates.sIntakeSpeed);
+      Objects.spinnerRight.set(RobotStates.sIntakeSpeed);
 
       // Fix once button boards get implemented
-      if ( !Objects.kIR_Sensor.get() && (RobotContainer.getPosition() == positions.Substation || 
+      if ( !Objects.IR_Sensor.get() && (RobotContainer.getPosition() == positions.Substation || 
       RobotContainer.getPosition() == positions.Floor) && RobotStates.sObjectState) {
       //&& !RobotContainer.copilotController.getRawButton(15) ) {
         closeGrip();
       }
     } else {
       // prevent CAN timeouts when disabled, actual motor stoppage is handled at a lower level
-      Objects.kSpinnerLeft.set(0);
-      Objects.kSpinnerRight.set(0);
+      Objects.spinnerLeft.set(0);
+      Objects.spinnerRight.set(0);
     }
 }
 }
