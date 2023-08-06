@@ -58,7 +58,7 @@ public class DriveIO implements DriveIOInterface{
                 0.006, 0, 0.0016,
                 new TrapezoidProfile.Constraints(1, 1));
 
-        balanceController.setTolerance(2.5);
+        balanceController.setTolerance(45);
 
         swerveDrive(
             0, 

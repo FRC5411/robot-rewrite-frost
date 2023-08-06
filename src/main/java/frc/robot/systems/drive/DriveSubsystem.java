@@ -33,7 +33,7 @@ public class DriveSubsystem extends SubsystemBase {
           () -> {
             IO.autoBalance();
           },
-          interrupted -> {}, 
+          interrupted -> {IO.swerveDrive(0, 0, 0, false);}, 
           () -> false,
           this);
     }
