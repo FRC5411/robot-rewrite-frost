@@ -1,22 +1,36 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.systems.drive.DriveSubsystem;
+import frc.robot.systems.drive.DriveVars;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class RobotContainer {
+  DriveSubsystem robotDrive;
+
   public RobotContainer() {
+    robotDrive = new DriveSubsystem();
+
+    robotDrive.setDefaultCommand(
+        robotDrive.driveCMD(
+            () -> - deadzone(ControllerVars.xboxController.getLeftY()) * DriveVars.Constants.kMaxLinSpeedMeters,
+            () -> deadzone(ControllerVars.xboxController.getLeftX()) * DriveVars.Constants.kMaxLinSpeedMeters,
+            () -> deadzone(ControllerVars.xboxController.getRightX()) * DriveVars.Constants.kMaxRotMeters,
+            () -> RobotStates.sField
+    ));
+
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    ControllerVars.b.onTrue(robotDrive.resetPoseCMD(new Pose2d()));
+    ControllerVars.a.onTrue(robotDrive.toggleFieldCMD());
+    ControllerVars.x.onTrue(robotDrive.xLockCMD());
+  }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return robotDrive.getAuton();
   }
 
     public static DriverStation.Alliance getDriverAlliance() {
@@ -31,4 +45,15 @@ public class RobotContainer {
       return RobotStates.positions.Floor;
   }
 
+  public double deadzone(double val) {
+    if (Math.abs(val) < 0.1) {
+      return 0;
+    } else {
+      return val;
+    }
+  }
+
+  public static String getAutonPath() {
+    return RobotStates.sAutonPath;
+  }
 }

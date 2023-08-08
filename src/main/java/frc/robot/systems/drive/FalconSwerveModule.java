@@ -1,4 +1,4 @@
-package frc.robot.utils;
+package frc.robot.systems.drive;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
@@ -7,7 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.systems.drive.DriveVars.Constants;
-
+import frc.robot.utils.*;
 
 public class FalconSwerveModule implements SwerveModuleInterface {
     private WPI_TalonFX m_speed;
@@ -67,10 +67,10 @@ public class FalconSwerveModule implements SwerveModuleInterface {
     public void setAngleDegrees(SwerveModuleState state) {
         //This line of code controls whether the swerve wheels go back 
         //into their starting position when the joystick are not being used, made by 364
-        // Rotation2d angle = (Math.abs(state.speedMetersPerSecond) <= (DRIVETRAIN.MAX_LINEAR_SPEED * 0.01)) ? lastAngle : state.angle;
-        double angleDegrees = state.angle.getDegrees();
+        Rotation2d angle = (Math.abs(state.speedMetersPerSecond) <= (DriveVars.Constants.kMaxLinSpeedMeters * 0.01)) ? lastAngle : state.angle;
+        //double angleDegrees = state.angle.getDegrees();
 
-        setDegrees(angleDegrees);
+        setDegrees(angle.getDegrees());
 
         lastAngle = state.angle;
     }
@@ -117,8 +117,14 @@ public class FalconSwerveModule implements SwerveModuleInterface {
             Conversions.degreesToCANcoder(angleDegrees, 1));
     }
 
-    public SwerveModuleState getState() {
+    public SwerveModuleState getDesiredState() {
         return debugState;
+    }
+
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(
+            getDriveVelocity(),
+            getAngleRads());
     }
 
     public void setTelemetry(int i) {

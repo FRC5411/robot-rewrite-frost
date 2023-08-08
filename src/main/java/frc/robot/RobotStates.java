@@ -7,6 +7,8 @@ public class RobotStates {
     public static boolean sOpenLoop = true;
     public static double sIntakeSpeed = 0;
     public static boolean sObjectState = true;
+    public static boolean sUseColor = true;
+    public static String sAutonPath = "New Path";
 
     public static HashMap<String, Command> sEventMap = new HashMap<String, Command>();
 
