@@ -26,10 +26,10 @@ public class IntakeVars {
     }
 
     public static class Objects {
-        public static DoubleSolenoid kClaw = new DoubleSolenoid(Constants.kPCH_ID, PneumaticsModuleType.REVPH, Constants.kForwardChannel, Constants.kBackwardChannel);
-        public static CANSparkMax kSpinnerLeft = REVConfigs.initNEO550Motor(Constants.kGripLeftID, false);
-        public static CANSparkMax kSpinnerRight = REVConfigs.initNEO550Motor(Constants.kGripRightID, false);
-        public static DigitalInput kIR_Sensor = new DigitalInput(Constants.kIR_Sensor_ID);
+        public static DoubleSolenoid claw = new DoubleSolenoid(Constants.kPCH_ID, PneumaticsModuleType.REVPH, Constants.kForwardChannel, Constants.kBackwardChannel);
+        public static CANSparkMax spinnerLeft = REVConfigs.initNEO550Motor(Constants.kGripLeftID, false);
+        public static CANSparkMax spinnerRight = REVConfigs.initNEO550Motor(Constants.kGripRightID, false);
+        public static DigitalInput IR_Sensor = new DigitalInput(Constants.kIR_Sensor_ID);
     }
 }
 
