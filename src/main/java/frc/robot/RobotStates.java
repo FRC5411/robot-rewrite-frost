@@ -1,6 +1,7 @@
 package frc.robot;
 import java.util.HashMap;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.systems.arm.ArmVars.Sets.armPositions;
 
 public class RobotStates {
     public static boolean sField = false;
@@ -18,21 +19,5 @@ public class RobotStates {
         None
     }
 
-    public static enum positions {
-        ScoreHighCone,
-        DipHighCone,
-        ScoreHighCube,
-        ScoreMidCone,
-        DipMidCone,
-        ScoreMidCube,
-        ScoreHighPlace,
-        ScoreMidPlace,
-        ScoreLow,
-        Floor,
-        FloorAlt,
-        FloorAltCube,
-        Substation,
-        Idle,
-        IdleShootPosition
-    }
+    public static armPositions.positions sArmPosition = armPositions.positions.Idle;
 }

@@ -3,13 +3,14 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.systems.intake;
-import frc.robot.RobotContainer;
 import frc.robot.RobotStates;
 import frc.robot.systems.intake.IntakeVars.Constants;
 import frc.robot.systems.intake.IntakeVars.Objects;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotStates.*;
+import frc.robot.systems.arm.ArmVars.Sets.armPositions.positions;
+
 
 /** Add your docs here. */
 public class IntakeIO {
@@ -52,11 +53,15 @@ public class IntakeIO {
   public void intake() {
     if(!RobotStates.sObjectState) {
       openGrip();
+      spinIn();
     } else {
       closeGrip();
     }
   }
 
+/*
+
+*/
   public void setCone(boolean check){
     RobotStates.sObjectState = check;
   }
@@ -79,8 +84,8 @@ public class IntakeIO {
       Objects.spinnerRight.set(RobotStates.sIntakeSpeed);
 
       // Fix once button boards get implemented
-      if ( !Objects.IR_Sensor.get() && (RobotContainer.getPosition() == positions.Substation || 
-      RobotContainer.getPosition() == positions.Floor) && RobotStates.sObjectState) {
+      if ( !Objects.IR_Sensor.get() && (RobotStates.sArmPosition == positions.Substation || 
+      RobotStates.sArmPosition == positions.Floor) && RobotStates.sObjectState) {
       //&& !RobotContainer.copilotController.getRawButton(15) ) {
         closeGrip();
       }

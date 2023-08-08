@@ -5,7 +5,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.systems.arm.ArmVars.Sets.armPositions.positions;
 import frc.robot.systems.arm.ArmVars.Sets.armPositions;
+import frc.robot.RobotStates;
 
 public class ArmSubsystem extends SubsystemBase {
     double manualTargetTheta;
@@ -17,6 +20,8 @@ public class ArmSubsystem extends SubsystemBase {
     double stage2Setpoint;
     double stage3Setpoint;
 
+    public positions mPos;
+
   public ArmSubsystem() {
     armPositions.setPositionMap();
 
@@ -26,6 +31,8 @@ public class ArmSubsystem extends SubsystemBase {
     stage1Setpoint = Objects.jointStageOne.getOffsetEncValue();
     stage2Setpoint = Objects.jointStageTwo.getOffsetEncValue();
     stage3Setpoint = Objects.jointStageThree.getOffsetEncValue();
+
+    mPos = positions.Idle;
   }
 
 private void updateSetPoints (double stage1Angle, double stage2Angle, double stage3Angle) {    
@@ -37,6 +44,7 @@ private void updateSetPoints (double stage1Angle, double stage2Angle, double sta
 
   public Command updateSetPointsCMD(armPositions.positions position) {
     ArmPosition pos = armPositions.positionMap.get(position);
+    mPos = position;
     return new InstantCommand(() -> updateSetPoints(pos.getStage1Angle(), pos.getStage2Angle(), pos.getStage3Angle()));
   }
 
@@ -57,8 +65,22 @@ private void updateSetPoints (double stage1Angle, double stage2Angle, double sta
       this);
   }
 
+  public Command goToScoreHigh(){
+        if(RobotStates.sObjectState){
+            return new SequentialCommandGroup(updateSetPointsCMD(armPositions.positions.ScoreHighCone).withTimeout(0.6), goToDipHigh());
+        }
+        else{
+            return updateSetPointsCMD(positions.ScoreHighCube);
+        }
+    }
+
+   public Command goToDipHigh() {
+        return updateSetPointsCMD(positions.DipHighCone);
+  }
+
 
   @Override
   public void periodic() {
+    RobotStates.sArmPosition = mPos;
   }
 }
