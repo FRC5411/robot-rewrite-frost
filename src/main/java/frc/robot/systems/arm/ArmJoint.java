@@ -5,63 +5,131 @@
 package frc.robot.systems.arm;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import frc.robot.systems.arm.ArmVars.Constants;
+import frc.robot.systems.arm.ArmVars.Sets;
+import edu.wpi.first.math.geometry.Rotation2d;
+import java.util.function.BooleanSupplier;
 
-/** Add your docs here. */
 public class ArmJoint {
-    private CANSparkMax armMotor;
-    private DutyCycleEncoder armEncoder;
-    private ProfiledPIDController armPID;
-    private double armTarget;
-    private byte armJointNum;
+    private CANSparkMax jointMotor;
+    private DutyCycleEncoder jointEncoder;
+    private ArmFeedforward jointFeedforward;
+    private int jointTolerance;
+    public ProfiledPIDController jointPID;
+    public double jointSetpoint;
+    public double jointOffsetDeg;
 
-    private ArmFeedforward armFF;
-
-    private double armKP;
-    private double armKI;
-    private double armKD;
-
-
-    public ArmJoint(CANSparkMax motorPar, DutyCycleEncoder encoderPar, ProfiledPIDController pidPar, 
-                    double targetPar, byte jointNumPar, ArmFeedforward feedforwardPar) {
-        armMotor = motorPar;
-        armEncoder = encoderPar;
-        armPID = pidPar;
-        armTarget = targetPar;
-        armJointNum = jointNumPar;
-        armFF = feedforwardPar;
+    public ArmJoint(int jointNum) {
+        initVars(jointNum); // Fetches variables from constants and sets it to this class' variables
+        configureVars(); // Configures PID, FF, Motors, etc.
     }
 
-    public void initMotorAndEnc(){
-        armMotor = new CANSparkMax(armJointNum, null);
+    private void initVars(int jointNum) {
+        switch(jointNum) {
+            case 1:
+                jointMotor = Sets.stageOneJoint.kArmMotor;
+                jointEncoder = Sets.stageOneJoint.kArmEncoder;
+                jointFeedforward = Sets.stageOneJoint.kArmFF;
+                jointTolerance = Sets.stageOneJoint.kTolerance;
+                jointPID = Sets.stageOneJoint.kArmPID;
+                jointOffsetDeg = Sets.stageOneJoint.kArmOffsetDeg;
+                break;
+            case 2:
+                jointMotor = Sets.stageTwoJoint.kArmMotor;
+                jointEncoder = Sets.stageTwoJoint.kArmEncoder;
+                jointFeedforward = Sets.stageTwoJoint.kArmFF;
+                jointTolerance = Sets.stageTwoJoint.kTolerance;
+                jointPID = Sets.stageTwoJoint.kArmPID;
+                jointOffsetDeg = Sets.stageOneJoint.kArmOffsetDeg;
+                break;
+            
+            case 3:
+                jointMotor = Sets.stageThreeJoint.kArmMotor;
+                jointEncoder = Sets.stageThreeJoint.kArmEncoder;
+                jointFeedforward = Sets.stageThreeJoint.kArmFF;
+                jointTolerance = Sets.stageThreeJoint.kTolerance;
+                jointPID = Sets.stageThreeJoint.kArmPID;
+                jointOffsetDeg = Sets.stageOneJoint.kArmOffsetDeg;
+                break;
 
-        armMotor.restoreFactoryDefaults();
-        armMotor.clearFaults();
-        armMotor.burnFlash();
-        armMotor.setSmartCurrentLimit(40);
-        armMotor.setSecondaryCurrentLimit(40);
-        armMotor.setIdleMode(IdleMode.kBrake);
-
+            default:
+                System.out.println("!!! SWITCH CASE ERROR !!!");
+        }
     }
 
-    public void initPIDAndFF(){
+    private void configureVars(){
+        jointPID.enableContinuousInput(0, 360);
+        jointPID.setTolerance(jointTolerance);
+        jointPID.setIntegratorRange(Constants.kJointIntegratorMin, Constants.kJointIntegratorMax);
+    }
 
-        // TODO ADD ARM FF TO CONSTANTS
-        armFF = new ArmFeedforward(0, 0, 0,0); // 1.37 1.35 1.3
-  
-        // TODO ADD TRAPEZOIDAL PROFILE CONSTRAINTS TO CONSTANTS
-        armPID = new ProfiledPIDController(
-            armKP, armKI, armKD, 
-            new TrapezoidProfile.Constraints(0, 0)
-        );
+    public void setJointStop(){
+        jointMotor.set(0);
+    }
 
-        armPID.enableContinuousInput(0, 360);
+    public void voltJointStop(){
+        jointMotor.setVoltage(0);
+    }
+    
+    public void setJointVolts(double voltage){
+        jointMotor.setVoltage(voltage);
+    }
+    
+    public double getEncoderValue(){
+        return jointEncoder.getAbsolutePosition() * 360;
+    }
 
+    public double getOffsetEncValue(){
+        return getEncoderValue() - jointOffsetDeg;
+    }
+    
+    public double getArmErrorVal(){
+        return getEncoderValue() - jointSetpoint;
+    }
+    
 
+    public Rotation2d getRotation() {
+        return new Rotation2d(Math.toRadians(getEncoderValue()));
+    }
+
+    public Rotation2d getOffsetRotation() {
+        return new Rotation2d(Math.toRadians(getOffsetEncValue()));
+    }
+
+    public void runPIDVolts() {
+        setJointVolts(
+            jointPID.calculate(getOffsetEncValue(), jointSetpoint) 
+            + 
+            jointFeedforward.calculate(
+                Math.toRadians(jointPID.getSetpoint().position), 
+                Math.toRadians(jointPID.getSetpoint().velocity)));
+    }
+
+    public void holdJoint() {
+        setJointVolts(
+            jointFeedforward.calculate(
+                getOffsetEncValue(), 0));
+    }
+
+    public void executeControl(BooleanSupplier angleDeadZone) {
+        if(angleDeadZone.getAsBoolean()) runPIDVolts();
+        else holdJoint();
+    }
+
+    public void resetProfiles(){
+        jointPID.reset(getRotation().getDegrees());
+    }
+
+    public double getError() {
+        return jointPID.getPositionError();
+    }
+
+    public boolean inDeadzone(double deadzone) {
+        boolean inDeadzone = getError() <= deadzone;
+        return inDeadzone;
     }
 }
