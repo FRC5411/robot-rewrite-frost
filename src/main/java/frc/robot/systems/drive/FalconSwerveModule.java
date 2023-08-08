@@ -1,7 +1,11 @@
 package frc.robot.systems.drive;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
@@ -15,6 +19,8 @@ public class FalconSwerveModule implements SwerveModuleInterface {
     private WPI_CANCoder rot_encoder;
     private SwerveModuleState debugState;
     private Rotation2d lastAngle;
+    private SimpleMotorFeedforward ff;
+    private PIDController azmthCont;
 
     public FalconSwerveModule(WPI_TalonFX speed, WPI_TalonFX rotation, WPI_CANCoder encoder, double offset) {
         m_speed = speed;
@@ -37,6 +43,41 @@ public class FalconSwerveModule implements SwerveModuleInterface {
             rotation, rot_encoder);
 
         debugState = new SwerveModuleState();
+
+        ff = new SimpleMotorFeedforward(0.06, 0);
+
+        azmthCont = new PIDController(Constants.kAzimuthKp, 0, Constants.kAzimuthKd);
+        azmthCont.enableContinuousInput(0, 360);
+        azmthCont.setTolerance(0);
+    }
+
+    public FalconSwerveModule(WPI_TalonFX speed, WPI_TalonFX rotation, WPI_CANCoder encoder, double offset, double kp, double kf) {
+        m_speed = speed;
+        m_rotation = rotation;
+        rot_encoder = encoder;
+
+        lastAngle = new Rotation2d();
+
+        Timer.delay(1);
+
+        CTRESwerveConfigs.configDrive(
+            Constants.kDriveKp, Constants.kDriveKf, 
+            speed);
+
+        CTRESwerveConfigs.configPosition(
+            rot_encoder, offset);
+
+        CTRESwerveConfigs.configAzimuth(
+            Constants.kAzimuthKp, Constants.kAzimuthKd, Constants.kAzimuthKf, Constants.kAzimuthDeadBand,
+            rotation, rot_encoder);
+
+        debugState = new SwerveModuleState();
+
+        ff = new SimpleMotorFeedforward(kf, 0);
+
+        azmthCont = new PIDController(kp, 0, Constants.kAzimuthKd);
+        azmthCont.enableContinuousInput(0, 360);
+        azmthCont.setTolerance(0);
     }
 
     @Override
@@ -104,7 +145,8 @@ public class FalconSwerveModule implements SwerveModuleInterface {
 
     @Override
     public void resetToAbsolute() {
-        rot_encoder.setPosition(0);
+        double rotation = getEncoder().getAbsolutePosition();
+        m_rotation.setSelectedSensorPosition(Conversions.degreesToFalcon(rotation, DriveVars.Constants.kAzimuthGearRatio));
     }
 
     @Override
@@ -113,8 +155,10 @@ public class FalconSwerveModule implements SwerveModuleInterface {
     }
 
     public void setDegrees(double angleDegrees) {
-        m_rotation.set(ControlMode.Position, 
-            Conversions.degreesToCANcoder(angleDegrees, 1));
+        m_rotation.set(ControlMode.PercentOutput, 
+        azmthCont.calculate(getEncoder().getAbsolutePosition(), angleDegrees) 
+        +
+        0.06 * Math.signum(azmthCont.getPositionError()));
     }
 
     public SwerveModuleState getDesiredState() {

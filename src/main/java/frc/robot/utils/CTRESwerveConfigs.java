@@ -37,7 +37,7 @@ public class CTRESwerveConfigs {
         motor.setInverted(TalonFXInvertType.CounterClockwise);
         motor.setNeutralMode(NeutralMode.Brake);
         motor.configRemoteFeedbackFilter(position, 0);
-        motor.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
+        motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         motor.configStatorCurrentLimit(AZIMUTH_CURRENT_LIMIT);
         motor.setSelectedSensorPosition(position.getAbsolutePosition());
         motor.config_kP(0, kp);

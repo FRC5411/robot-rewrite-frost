@@ -6,14 +6,19 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
 import frc.robot.RobotStates;
 
 public class DriveSubsystem extends SubsystemBase {
-    public DriveSimIO IO;
+    public DriveIO IO;
 
     public DriveSubsystem() {
-        IO = new DriveSimIO();
+        IO = new DriveIO();
+
+        Timer.delay(1);
+
+        IO.resetModules();
     }
 
     public Command driveCMD(DoubleSupplier x, DoubleSupplier y, DoubleSupplier z, BooleanSupplier field) {
@@ -27,13 +32,24 @@ public class DriveSubsystem extends SubsystemBase {
             this);
     }
 
+    public Command instantdriveCMD(DoubleSupplier x, DoubleSupplier y, DoubleSupplier z, BooleanSupplier field) {
+        return new FunctionalCommand(
+            () -> {},
+            () -> {
+                IO.swerveDrive(x.getAsDouble(), y.getAsDouble(), z.getAsDouble(), field.getAsBoolean());
+            },
+            interrupted -> {}, 
+            () -> true,
+            this);
+    }
+
     public Command autoBalanceCMD() {
       return new FunctionalCommand(
           () -> {},
           () -> {
             IO.autoBalance();
           },
-          interrupted -> {IO.swerveDrive(0, 0, 0, false);}, 
+          interrupted -> {}, 
           () -> false,
           this);
     }

@@ -94,7 +94,7 @@ public class DriveSimIO implements DriveIOInterface{
     }
 
     public void update() {
-        for(int i = 0; i < Simulation.modules.length - 1 ; i++) {
+        for(int i = 0; i < Simulation.modules.length ; i++) {
             Simulation.modules[i].update(0.2);
         }
 

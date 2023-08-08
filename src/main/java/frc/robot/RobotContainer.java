@@ -24,9 +24,10 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    ControllerVars.b.onTrue(robotDrive.resetPoseCMD(new Pose2d()));
-    ControllerVars.a.onTrue(robotDrive.toggleFieldCMD());
-    ControllerVars.x.onTrue(robotDrive.xLockCMD());
+    ControllerVars.b.onTrue(robotDrive.instantdriveCMD(() -> 5.4, () -> 0, () -> 0, () -> false));
+    ControllerVars.b.onFalse(robotDrive.instantdriveCMD(() -> 0, () -> 0, () -> 0, () -> false));
+    ControllerVars.a.onTrue(robotDrive.instantdriveCMD(() -> 0, () -> 1, () -> 0, () -> false));
+    ControllerVars.a.onFalse(robotDrive.instantdriveCMD(() -> 0, () -> 0, () -> 0, () -> false));
   }
 
   public Command getAutonomousCommand() {
