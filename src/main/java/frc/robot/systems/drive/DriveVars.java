@@ -31,8 +31,9 @@ public final class DriveVars {
 
         public static final WPI_Pigeon2 gyro = new WPI_Pigeon2(Constants.kPigeonID, "drivetrain");
 
+        // TODO: TESTING A POTENTIAL FIX FOR FL
         public static final FalconSwerveModule TopLeft = new FalconSwerveModule(
-            LeftFront, rLeftFront, LeftFrontEncoder, Constants.kFLEncOffset, true, 15.0);
+            LeftFront, rLeftFront, LeftFrontEncoder, Constants.kFLEncOffset);
         public static final FalconSwerveModule TopRight = new FalconSwerveModule(
             RightFront, rRightFront, RightFrontEncoder ,Constants.kFREncOffset);
         public static final FalconSwerveModule BottomLeft = new FalconSwerveModule(
@@ -76,7 +77,7 @@ public final class DriveVars {
         public static final double kDriveGearRatio = 6.75;
         public static final double kAzimuthGearRatio = 12.8;
 
-        public static final double kFLEncOffset = -313.506+0.5 - 180;
+        public static final double kFLEncOffset = -313.506+0.5;
         public static final double kFREncOffset = -69.082+0.5;
         public static final double kBLEncOffset = -45.791 + 180;
         public static final double kBREncOffset = -257.783;
