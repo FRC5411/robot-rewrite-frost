@@ -16,9 +16,9 @@ public class DriveSubsystem extends SubsystemBase {
     public DriveSubsystem() {
         IO = new DriveIO();
 
-        Timer.delay(1);
+        // Timer.delay(1);
 
-        IO.resetModules();
+        // IO.resetModules();
     }
 
     public Command driveCMD(DoubleSupplier x, DoubleSupplier y, DoubleSupplier z, BooleanSupplier field) {
@@ -75,5 +75,9 @@ public class DriveSubsystem extends SubsystemBase {
         IO.update();
         IO.telemetry();
         IO.putRobotOnField(IO.getPose());
+    }
+
+    public DriveIO getIO() {
+        return IO;
     }
 }

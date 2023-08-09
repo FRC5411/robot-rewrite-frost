@@ -39,7 +39,6 @@ public class CTRESwerveConfigs {
         motor.configRemoteFeedbackFilter(position, 0);
         motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         motor.configStatorCurrentLimit(AZIMUTH_CURRENT_LIMIT);
-        motor.setSelectedSensorPosition(position.getAbsolutePosition());
         motor.config_kP(0, kp);
         motor.config_kD(0, kd);
         motor.config_kF(0, kf);

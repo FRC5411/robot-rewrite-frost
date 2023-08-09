@@ -1,0 +1,33 @@
+{
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "Module0": {
+          "open": true
+        },
+        "Module1": {
+          "open": true
+        },
+        "Module2": {
+          "open": true
+        },
+        "Module3": {
+          "open": true
+        },
+        "open": true
+      },
+      "limelight": {
+        "open": true
+      }
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Field2d": "Field2d"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT3)",
+    "serverTeam": "5411"
+  }
+}

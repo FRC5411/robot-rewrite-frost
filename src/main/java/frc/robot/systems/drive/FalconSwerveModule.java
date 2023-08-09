@@ -21,6 +21,9 @@ public class FalconSwerveModule implements SwerveModuleInterface {
     private Rotation2d lastAngle;
     private SimpleMotorFeedforward ff;
     private PIDController azmthCont;
+    private double modBoost = 15;
+    private boolean useB = false;
+    private double secoffset = 0;
 
     public FalconSwerveModule(WPI_TalonFX speed, WPI_TalonFX rotation, WPI_CANCoder encoder, double offset) {
         m_speed = speed;
@@ -51,7 +54,7 @@ public class FalconSwerveModule implements SwerveModuleInterface {
         azmthCont.setTolerance(0);
     }
 
-    public FalconSwerveModule(WPI_TalonFX speed, WPI_TalonFX rotation, WPI_CANCoder encoder, double offset, double kp, double kf) {
+    public FalconSwerveModule(WPI_TalonFX speed, WPI_TalonFX rotation, WPI_CANCoder encoder, double offset, boolean invert, double secondoffset) {
         m_speed = speed;
         m_rotation = rotation;
         rot_encoder = encoder;
@@ -64,6 +67,8 @@ public class FalconSwerveModule implements SwerveModuleInterface {
             Constants.kDriveKp, Constants.kDriveKf, 
             speed);
 
+            speed.setInverted(invert);
+
         CTRESwerveConfigs.configPosition(
             rot_encoder, offset);
 
@@ -73,11 +78,13 @@ public class FalconSwerveModule implements SwerveModuleInterface {
 
         debugState = new SwerveModuleState();
 
-        ff = new SimpleMotorFeedforward(kf, 0);
+        ff = new SimpleMotorFeedforward(0.06, 0);
 
-        azmthCont = new PIDController(kp, 0, Constants.kAzimuthKd);
+        azmthCont = new PIDController(Constants.kAzimuthKp, 0, Constants.kAzimuthKd);
         azmthCont.enableContinuousInput(0, 360);
         azmthCont.setTolerance(0);
+
+        secoffset = secondoffset;
     }
 
     @Override
@@ -111,7 +118,7 @@ public class FalconSwerveModule implements SwerveModuleInterface {
         Rotation2d angle = (Math.abs(state.speedMetersPerSecond) <= (DriveVars.Constants.kMaxLinSpeedMeters * 0.01)) ? lastAngle : state.angle;
         //double angleDegrees = state.angle.getDegrees();
 
-        setDegrees(angle.getDegrees());
+        setDegrees(angle.getDegrees() + secoffset);
 
         lastAngle = state.angle;
     }
@@ -156,10 +163,13 @@ public class FalconSwerveModule implements SwerveModuleInterface {
 
     public void setDegrees(double angleDegrees) {
         m_rotation.set(ControlMode.PercentOutput, 
-        azmthCont.calculate(getEncoder().getAbsolutePosition(), angleDegrees) 
+        azmthCont.calculate(
+            Conversions.falconToDegrees(m_rotation.getSelectedSensorPosition(), 12.8) % 360,
+            angleDegrees) 
         +
         0.06 * Math.signum(azmthCont.getPositionError()));
     }
+    
 
     public SwerveModuleState getDesiredState() {
         return debugState;

@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.systems.drive.DriveSubsystem;
 import frc.robot.systems.drive.DriveVars;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,8 +16,8 @@ public class RobotContainer {
     robotDrive.setDefaultCommand(
         robotDrive.driveCMD(
             () -> - deadzone(ControllerVars.xboxController.getLeftY()) * DriveVars.Constants.kMaxLinSpeedMeters,
-            () -> deadzone(ControllerVars.xboxController.getLeftX()) * DriveVars.Constants.kMaxLinSpeedMeters,
-            () -> deadzone(ControllerVars.xboxController.getRightX()) * DriveVars.Constants.kMaxRotMeters,
+            () -> - deadzone(ControllerVars.xboxController.getLeftX()) * DriveVars.Constants.kMaxLinSpeedMeters,
+            () -> - deadzone(ControllerVars.xboxController.getRightX()) * DriveVars.Constants.kMaxRotMeters,
             () -> RobotStates.sField
     ));
 
@@ -56,5 +57,9 @@ public class RobotContainer {
 
   public static String getAutonPath() {
     return RobotStates.sAutonPath;
+  }
+
+  public DriveSubsystem getDrive() {
+    return robotDrive;
   }
 }
