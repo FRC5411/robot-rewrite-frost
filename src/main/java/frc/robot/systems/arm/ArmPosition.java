@@ -31,6 +31,6 @@ public class ArmPosition {
     }
 
     public double getYPosition() {
-        return -(Sets.stageOneJoint.kArmLength * Math.sin(Math.toRadians(stage1Angle)) + Sets.stageTwoJoint.kArmLength * Math.sin(Math.toRadians(stage2Angle)));
+        return Sets.stageOneJoint.kArmLength * Math.sin(Math.toRadians(stage1Angle) + Sets.stageTwoJoint.kArmLength * Math.sin(Math.toRadians(stage2Angle)));
     }
 }

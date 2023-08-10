@@ -1,11 +1,11 @@
 package frc.robot.systems.arm;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.systems.arm.ArmVars.Objects;
+import frc.robot.systems.arm.ArmVars.Sets;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.systems.arm.ArmVars.Sets.armPositions.positions;
 import frc.robot.systems.arm.ArmVars.Sets.armPositions;
 import frc.robot.RobotStates;
@@ -35,20 +35,25 @@ public class ArmSubsystem extends SubsystemBase {
     mPos = positions.Idle;
   }
 
-private void updateSetPoints (double stage1Angle, double stage2Angle, double stage3Angle) {    
-    manualTargetTheta = stage3Angle - Objects.jointStageThree.jointOffsetDeg;
-    Objects.jointStageOne.jointSetpoint = stage1Angle % 360;
-    Objects.jointStageTwo.jointSetpoint = stage2Angle % 360;
-    Objects.jointStageThree.jointSetpoint = stage3Angle % 360;
-}
-
-  public Command updateSetPointsCMD(armPositions.positions position) {
-    ArmPosition pos = armPositions.positionMap.get(position);
-    mPos = position;
-    return new InstantCommand(() -> updateSetPoints(pos.getStage1Angle(), pos.getStage2Angle(), pos.getStage3Angle()));
+  private void updateSetPoints (double stage1Angle, double stage2Angle, double stage3Angle) {    
+      manualTargetTheta = stage3Angle - Objects.jointStageThree.jointOffsetDeg;
+      Objects.jointStageOne.jointSetpoint = (stage1Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
+      Objects.jointStageTwo.jointSetpoint = (stage2Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
+      Objects.jointStageThree.jointSetpoint = (stage3Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
   }
 
-  public Command moveToPositionCmd() {
+  public Command updateSetPointsCMD(armPositions.positions position) {
+      ArmPosition pos = armPositions.positionMap.get(position);
+      mPos = position;
+      return updateSetPointsCMD(pos.getStage1Angle(), pos.getStage2Angle(), pos.getStage3Angle());
+  }
+
+  public Command updateSetPointsCMD(double x, double y, double z) {
+      return new InstantCommand(() -> updateSetPoints(x, y, z));
+  }
+
+  // The bool suppliers are not used currently, but they are there for future use
+  public Command moveToPositionCmd(BooleanSupplier goingToTuck) {
     return new FunctionalCommand(
       () -> {
         Objects.jointStageOne.resetProfiles();
@@ -56,28 +61,14 @@ private void updateSetPoints (double stage1Angle, double stage2Angle, double sta
         Objects.jointStageThree.resetProfiles();
       },
       () -> {
-        Objects.jointStageOne.executeControl(() -> true);
-        Objects.jointStageTwo.executeControl(joint1Deadzone);
-        Objects.jointStageThree.executeControl(joint2Deadzone);
+        Objects.jointStageOne.executeControl(() -> true, goingToTuck);
+        Objects.jointStageTwo.executeControl(joint1Deadzone, goingToTuck);
+        Objects.jointStageThree.executeControl(joint2Deadzone, goingToTuck);
       },
       interrupted -> {},
       () -> false, 
-      this);
+      this); 
   }
-
-  public Command goToScoreHigh(){
-        if(RobotStates.sObjectState){
-            return new SequentialCommandGroup(updateSetPointsCMD(armPositions.positions.ScoreHighCone).withTimeout(0.6), goToDipHigh());
-        }
-        else{
-            return updateSetPointsCMD(positions.ScoreHighCube);
-        }
-    }
-
-   public Command goToDipHigh() {
-        return updateSetPointsCMD(positions.DipHighCone);
-  }
-
 
   @Override
   public void periodic() {

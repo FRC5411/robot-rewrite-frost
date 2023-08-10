@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.systems.arm;
 
 import com.revrobotics.CANSparkMax;
@@ -30,62 +26,62 @@ public class ArmVars {
     }
 
     public static class Sets {
-        public static class stageOneJoint{
-            public static final int kArmID = 1;
-            public static final int kEncoderID = 1;
+        public static class stageOneJoint {
+            public static final int kArmID = 31;
+            public static final int kEncoderID = 7;
             public static final CANSparkMax kArmMotor = REVConfigs.initNEOMotor(kArmID, false);
             public static final DutyCycleEncoder kArmEncoder = new DutyCycleEncoder(kEncoderID);
 
-            public static final double kArmOffsetDeg = 0;
-            public static final double kArmLength = 0; 
+            public static final double kArmOffsetDeg = 203.0;
+            public static final double kArmLength = 20.0; 
 
             // Feedforward
-            public static final int kS = 0;
-            public static final int kG = 0;
-            public static final int kV = 0;
-            public static final int kA = 0;
+            public static final double kS = 0.04;
+            public static final double kG = 1.1;
+            public static final double kV = 0;
+            public static final double kA = 0;
 
             public static final ArmFeedforward kArmFF = new ArmFeedforward(kS, kG, kV, kA);
             
             // PID
-            public static final int kP = 0;
-            public static final int kI = 0;
-            public static final int kD = 0;
-            public static final int kTolerance = 0;
-            public static final int kMaxVelocity = 0;
-            public static final int kMaxAccleration = 0;
+            public static final double kP = 0.0450;
+            public static final double kI = 0.0001;
+            public static final double kD = 0.0003;
+            public static final double kTolerance = 3;
+            public static final double kMaxVelocity = 800;
+            public static final double kMaxAccleration = 220;
 
             public static final ProfiledPIDController kArmPID = new ProfiledPIDController(
-                kP, kI, kD, 
+                kP, kI, kD,
                 new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAccleration)
             );
 
         }
 
         public static class stageTwoJoint{
-            public static final int kArmID = 1;
-            public static final int kEncoderID = 1;
+            public static final int kArmID = 33;
+            public static final int kEncoderID = 8;
             public static final CANSparkMax kArmMotor = REVConfigs.initNEOMotor(kArmID, false);
             public static final DutyCycleEncoder kArmEncoder = new DutyCycleEncoder(kEncoderID);
             
-            public static final double kArmOffsetDeg = 0;
-            public static final double kArmLength = 0; 
+            public static final double kArmOffsetDeg = 270.0;
+            public static final double kArmLength = 29.5; 
 
             // Feedforward
-            public static final int kS = 0;
-            public static final int kG = 0;
-            public static final int kV = 0;
-            public static final int kA = 0;
+            public static final double kS = 0.025;
+            public static final double kG = 0.75;
+            public static final double kV = 0.0;
+            public static final double kA = 0.0;
 
             public static final ArmFeedforward kArmFF = new ArmFeedforward(kS, kG, kV, kA);
             
             // PID
-            public static final int kP = 0;
-            public static final int kI = 0;
-            public static final int kD = 0;
-            public static final int kTolerance = 0;
-            public static final int kMaxVelocity = 0;
-            public static final int kMaxAccleration = 0;
+            public static final double kP = 0.0057;
+            public static final double kI = 0;
+            public static final double kD = 0.004;
+            public static final double kTolerance = 5.0;
+            public static final double kMaxVelocity = 1000.0;
+            public static final double kMaxAccleration = 340.0;
 
             public static final ProfiledPIDController kArmPID = new ProfiledPIDController(
                 kP, kI, kD, 
@@ -95,29 +91,29 @@ public class ArmVars {
         } 
         
         public static class stageThreeJoint{
-            public static final int kArmID = 1;
-            public static final int kEncoderID = 1;
+            public static final int kArmID = 34;
+            public static final int kEncoderID = 9;
             public static final CANSparkMax kArmMotor = REVConfigs.initNEOMotor(kArmID, false);
             public static final DutyCycleEncoder kArmEncoder = new DutyCycleEncoder(kEncoderID);
             
-            public static final double kArmOffsetDeg = 0;
-            public static final double kArmLength = 0; 
+            public static final double kArmOffsetDeg = 210.0;
+            public static final double kArmLength = 19.0; 
 
             // Feedforward
-            public static final int kS = 0;
-            public static final int kG = 0;
-            public static final int kV = 0;
-            public static final int kA = 0;
+            public static final double kS = 0.022;
+            public static final double kG = 0.0;
+            public static final double kV = 0.004;
+            public static final double kA = 0.0;
 
             public static final ArmFeedforward kArmFF = new ArmFeedforward(kS, kG, kV, kA);
             
             // PID
-            public static final int kP = 0;
-            public static final int kI = 0;
-            public static final int kD = 0;
-            public static final int kTolerance = 0;
-            public static final int kMaxVelocity = 0;
-            public static final int kMaxAccleration = 0;
+            public static final double kP = 0.0255;
+            public static final double kI = 0;
+            public static final double kD = 0.0005;
+            public static final double kTolerance = 0.0;
+            public static final double kMaxVelocity = 800.0;
+            public static final double kMaxAccleration = 560.0;
 
             public static final ProfiledPIDController kArmPID = new ProfiledPIDController(
                 kP, kI, kD, 
@@ -134,8 +130,6 @@ public class ArmVars {
             ScoreMidCone,
             DipMidCone,
             ScoreMidCube,
-            ScoreHighPlace,
-            ScoreMidPlace,
             ScoreLow,
             Floor,
             FloorAlt,
@@ -177,9 +171,7 @@ public class ArmVars {
             positionMap.put(positions.DipHighCone, dipHighConePosition);
             positionMap.put(positions.DipMidCone, dipMidConePosition);
         }
-
-        
-        }
+    }
 
     }
 }

@@ -18,7 +18,7 @@ public class ArmJoint {
     private CANSparkMax jointMotor;
     private DutyCycleEncoder jointEncoder;
     private ArmFeedforward jointFeedforward;
-    private int jointTolerance;
+    private double jointTolerance;
     public ProfiledPIDController jointPID;
     public double jointSetpoint;
     public double jointOffsetDeg;
@@ -103,7 +103,7 @@ public class ArmJoint {
     public void runPIDVolts() {
         setJointVolts(
             jointPID.calculate(getOffsetEncValue(), jointSetpoint) 
-            + 
+            +
             jointFeedforward.calculate(
                 Math.toRadians(jointPID.getSetpoint().position), 
                 Math.toRadians(jointPID.getSetpoint().velocity)));
@@ -115,9 +115,8 @@ public class ArmJoint {
                 getOffsetEncValue(), 0));
     }
 
-    public void executeControl(BooleanSupplier angleDeadZone) {
-        if(angleDeadZone.getAsBoolean()) runPIDVolts();
-        else holdJoint();
+    public void executeControl(BooleanSupplier angleDeadZone, BooleanSupplier goingTuck) {
+        runPIDVolts();
     }
 
     public void resetProfiles(){
