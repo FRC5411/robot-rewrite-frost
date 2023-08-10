@@ -1,18 +1,9 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.systems.intake;
-import frc.robot.RobotStates;
 import frc.robot.systems.intake.IntakeVars.Constants;
+import frc.robot.systems.intake.IntakeVars.GamePieces;
 import frc.robot.systems.intake.IntakeVars.Objects;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.RobotStates.*;
-import frc.robot.systems.arm.ArmVars.Sets.armPositions.positions;
 
-
-/** Add your docs here. */
 public class IntakeIO {
 
   public IntakeIO() {}
@@ -21,7 +12,6 @@ public class IntakeIO {
     Objects.claw.set(Value.kForward);
   }
 
-  /** Open */
   public void openGrip() {
     Objects.claw.set(Value.kReverse);
   }
@@ -35,23 +25,23 @@ public class IntakeIO {
   }
 
   public void spinSlow() {
-    RobotStates.sIntakeSpeed = Constants.kSpeedIn/4;
+    Objects.spinnerLeft.set(Constants.kSpeedIn / 4.0);
   }
 
   public void spinIn() {
-    RobotStates.sIntakeSpeed = Constants.kSpeedIn;
+    Objects.spinnerLeft.set(Constants.kSpeedIn);
   }
 
   public void spinOut() {
-    RobotStates.sIntakeSpeed = Constants.kSpeedOut;
+    Objects.spinnerLeft.set(Constants.kSpeedOut);
   }
 
   public void spinOff() {
-    RobotStates.sIntakeSpeed = 0;
+    Objects.spinnerLeft.set(0);
   } 
 
-  public void intake() {
-    if(!RobotStates.sObjectState) {
+  public void intake(GamePieces GP) {
+    if(!(GP == GamePieces.Cone)) {
       openGrip();
       spinIn();
     } else {
@@ -59,40 +49,11 @@ public class IntakeIO {
     }
   }
 
-/*
-
-*/
-  public void setCone(boolean check){
-    RobotStates.sObjectState = check;
-  }
-  public boolean wantCone () {
-    return RobotStates.sObjectState;
-  }
-
   public void setMode(GamePieces mode) {
-    RobotStates.sObjectState = (mode == GamePieces.Cone);
-    spinSlow();
-
-    if(!RobotStates.sObjectState){
+    if(mode != GamePieces.Cone) {
       openGrip();
     }
   }
 
-  public void periodic() {
-    if ( DriverStation.isEnabled() || DriverStation.isAutonomousEnabled() ) {
-      Objects.spinnerLeft.set(RobotStates.sIntakeSpeed);
-      Objects.spinnerRight.set(RobotStates.sIntakeSpeed);
-
-      // Fix once button boards get implemented
-      if ( !Objects.IR_Sensor.get() && (RobotStates.sArmPosition == positions.Substation || 
-      RobotStates.sArmPosition == positions.Floor) && RobotStates.sObjectState) {
-      //&& !RobotContainer.copilotController.getRawButton(15) ) {
-        closeGrip();
-      }
-    } else {
-      // prevent CAN timeouts when disabled, actual motor stoppage is handled at a lower level
-      Objects.spinnerLeft.set(0);
-      Objects.spinnerRight.set(0);
-    }
-}
+  public void periodic() {}
 }

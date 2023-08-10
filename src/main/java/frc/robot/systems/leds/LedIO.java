@@ -9,5 +9,5 @@ public class LedIO {
         Constants.k_r = r;
         Constants.k_g = g;
         Constants.k_b = b;
-      }
+    }
 }

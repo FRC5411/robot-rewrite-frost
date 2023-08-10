@@ -8,7 +8,6 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.systems.arm.ArmVars.Sets.armPositions.positions;
 import frc.robot.systems.arm.ArmVars.Sets.armPositions;
-import frc.robot.RobotStates;
 
 public class ArmSubsystem extends SubsystemBase {
     double manualTargetTheta;
@@ -71,7 +70,5 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    RobotStates.sArmPosition = mPos;
-  }
+  public void periodic() {}
 }

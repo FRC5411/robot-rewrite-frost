@@ -25,6 +25,12 @@ public class IntakeVars {
          public static final int kIR_Sensor_ID = 1;
     }
 
+    public enum GamePieces {
+        Cone,
+        Cube,
+        None
+    }
+
     public static class Objects {
         public static DoubleSolenoid claw = new DoubleSolenoid(Constants.kPCH_ID, PneumaticsModuleType.REVPH, Constants.kForwardChannel, Constants.kBackwardChannel);
         public static CANSparkMax spinnerLeft = REVConfigs.initNEO550Motor(Constants.kGripLeftID, false);

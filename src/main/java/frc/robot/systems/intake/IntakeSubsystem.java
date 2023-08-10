@@ -1,9 +1,13 @@
 package frc.robot.systems.intake;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.systems.arm.ArmVars.Sets.armPositions.positions;
+import frc.robot.systems.intake.IntakeVars.GamePieces;
 
 public class IntakeSubsystem extends SubsystemBase {
   IntakeIO IO;
@@ -12,15 +16,15 @@ public class IntakeSubsystem extends SubsystemBase {
     IO = new IntakeIO();
   }
 
-  public Command manualIntakeCommand() {
-    return new InstantCommand(() -> IO.intake(), this);
+  public Command manualIntakeCommand(GamePieces GP) {
+    return new InstantCommand(() -> IO.intake(GP), this);
   }
 
-  public Command outTakeCommand(positions pos) {
+  public Command outTakeCommand(positions pos, GamePieces GP) {
     return new InstantCommand( () -> {
-      if (pos == positions.Substation && IO.wantCone()) {
+      if (pos == positions.Substation && (GP == GamePieces.Cone)) {
         IO.closeGrip();
-      } else if ( IO.wantCone()) {
+      } else if ( GP == GamePieces.Cone) {
         if ( pos == positions.ScoreLow) {
           IO.spinOut();  
         }
@@ -30,6 +34,19 @@ public class IntakeSubsystem extends SubsystemBase {
         IO.spinOut();
       }
     });
+  }
+
+  public Command setMode(GamePieces GP) {
+    return new InstantCommand(() -> IO.setMode(GP));
+  }
+
+  public Command detectIntakeCommand(BooleanSupplier detect, BooleanSupplier end) {
+    return new FunctionalCommand(
+      () -> {},
+      () -> {if(detect.getAsBoolean()) {IO.closeGrip();}}, 
+      (interrupted) -> {}, 
+      detect, 
+      this);
   }
 
   public Command commandChooser(positions position) {
@@ -63,7 +80,6 @@ public class IntakeSubsystem extends SubsystemBase {
   public Command spinOffCommand() {
     return new InstantCommand(() -> IO.spinOff(), this);
   }
-
 
   @Override
   public void periodic() {}

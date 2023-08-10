@@ -30,6 +30,12 @@ public class LedSubsytem extends SubsystemBase{
       }); 
     }
 
+    public Command turnOff() {
+      return new InstantCommand( () -> {
+        IO.setColor(0, 0, 0);
+      });
+    }
+
       public Command flashGreen () { return new InstantCommand( () -> {
         Constants.k_r2 = Constants.k_r;
         Constants.k_g2 = Constants.k_g;
