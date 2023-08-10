@@ -9,6 +9,8 @@ import frc.robot.systems.drive.DriveVars;
 import frc.robot.systems.intake.IntakeSubsystem;
 import frc.robot.systems.intake.IntakeVars.GamePieces;
 
+import java.util.ResourceBundle.Control;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.managers.ArmIntakeManager;
 import frc.robot.systems.arm.ArmSubsystem;
@@ -52,7 +54,12 @@ public class RobotContainer {
     // ControllerVars.toggleRobotOrientBtn.onTrue(robotDrive.toggleFieldCMD());
     // // engageLimeLightBtn.onTrue(new InstantCommand(() -> m_swerve.PPmoveToPositionCommand().schedule()));
     // ControllerVars.engageAutobalanceBtn.whileTrue(robotDrive.autoBalanceCMD());
+    ControllerVars.engageAutobalanceBtn.onTrue(armIntakeManager.setMode(GamePieces.Cone));
+    ControllerVars.engageAutobalanceBtn.onFalse(armIntakeManager.setMode(GamePieces.Cube));
 
+    ControllerVars.resetOdometryBtn.onTrue(new InstantCommand(() -> armIntakeManager.manualIntakeCommand().schedule()));
+
+    ControllerVars.engageLimeLightBtn.onTrue(armIntakeManager.outTakeCommand());
 
     ControllerVars.substationPickupBtn.whileTrue(armIntakeManager.goToSubstation());
     ControllerVars.substationPickupBtn.onFalse(

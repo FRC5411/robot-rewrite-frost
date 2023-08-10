@@ -9,7 +9,7 @@ public class ControllerVars {
 
     public static final Trigger resetOdometryBtn = xboxController.a();
     public static final Trigger toggleRobotOrientBtn = xboxController.b();
-    // public static final Trigger engageLimeLightBtn = xboxController.x();
+    public static final Trigger engageLimeLightBtn = xboxController.x();
     public static final Trigger engageAutobalanceBtn = xboxController.y();
     
     ///////////////////////////////////////////////

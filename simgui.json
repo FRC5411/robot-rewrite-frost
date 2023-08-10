@@ -3,6 +3,7 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/ArmSubsystem": "Subsystem",
+      "/LiveWindow/Ungrouped/DigitalInput[1]": "Digital Input",
       "/LiveWindow/Ungrouped/DigitalInput[7]": "Digital Input",
       "/LiveWindow/Ungrouped/DigitalInput[8]": "Digital Input",
       "/LiveWindow/Ungrouped/DigitalInput[9]": "Digital Input",
@@ -63,8 +64,7 @@
           },
           "3.0": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Cone Visualizer": {
           "ArmPivot": {
@@ -100,6 +100,9 @@
             },
             "open": true
           }
+        },
+        "Intake": {
+          "open": true
         },
         "open": true
       }

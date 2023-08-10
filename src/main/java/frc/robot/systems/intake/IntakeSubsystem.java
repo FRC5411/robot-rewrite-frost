@@ -14,6 +14,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     IO = new IntakeIO();
+    IO.follow();
+    IO.spinSlow();
   }
 
   public Command manualIntakeCommand(GamePieces GP) {
@@ -86,5 +88,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    IO.periodic();
+  }
 }

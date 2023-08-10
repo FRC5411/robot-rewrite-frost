@@ -3,10 +3,14 @@ import frc.robot.systems.intake.IntakeVars.Constants;
 import frc.robot.systems.intake.IntakeVars.GamePieces;
 import frc.robot.systems.intake.IntakeVars.Objects;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 public class IntakeIO {
 
-  public IntakeIO() {}
+  public IntakeIO() {
+    follow();
+  }
 
   public void closeGrip() {
     Objects.claw.set(Value.kForward);
@@ -46,6 +50,7 @@ public class IntakeIO {
       spinIn();
     } else {
       closeGrip();
+      spinSlow();
     }
   }
 
@@ -59,5 +64,14 @@ public class IntakeIO {
     }
   }
 
-  public void periodic() {}
+  public void follow() {
+    Objects.spinnerRight.follow(Objects.spinnerLeft);
+  }
+
+  public void periodic() {
+    SmartDashboard.putBoolean("Intake/IR Sensor", !getSwitch());
+    SmartDashboard.putString("Intake/Pneumatis", Objects.claw.get().toString());
+    SmartDashboard.putNumber("Intake/Claw Spinner Left", Objects.spinnerLeft.get());
+    SmartDashboard.putNumber("Intake/Claw Spinner Right", Objects.spinnerRight.get());
+  }
 }
