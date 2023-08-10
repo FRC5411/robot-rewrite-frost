@@ -9,7 +9,6 @@ import frc.robot.systems.drive.DriveVars;
 import frc.robot.systems.intake.IntakeSubsystem;
 import frc.robot.systems.intake.IntakeVars.GamePieces;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.managers.ArmIntakeManager;
 import frc.robot.systems.arm.ArmSubsystem;
@@ -49,10 +48,11 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    ControllerVars.resetOdometryBtn.onTrue(robotDrive.resetPoseCMD(new Pose2d())); // Reset odometry to current position
-    ControllerVars.toggleRobotOrientBtn.onTrue(robotDrive.toggleFieldCMD());
-    // engageLimeLightBtn.onTrue(new InstantCommand(() -> m_swerve.PPmoveToPositionCommand().schedule()));
-    ControllerVars.engageAutobalanceBtn.whileTrue(robotDrive.autoBalanceCMD());
+    // ControllerVars.resetOdometryBtn.onTrue(robotDrive.resetPoseCMD(new Pose2d())); // Reset odometry to current position
+    // ControllerVars.toggleRobotOrientBtn.onTrue(robotDrive.toggleFieldCMD());
+    // // engageLimeLightBtn.onTrue(new InstantCommand(() -> m_swerve.PPmoveToPositionCommand().schedule()));
+    // ControllerVars.engageAutobalanceBtn.whileTrue(robotDrive.autoBalanceCMD());
+
 
     ControllerVars.substationPickupBtn.whileTrue(armIntakeManager.goToSubstation());
     ControllerVars.substationPickupBtn.onFalse(

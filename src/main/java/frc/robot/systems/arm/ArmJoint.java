@@ -104,12 +104,17 @@ public class ArmJoint {
     }
 
     public void runPIDVolts() {
-        setJointVolts(
-            jointPID.calculate(getOffsetEncValue(), jointSetpoint) 
-            +
-            jointFeedforward.calculate(
-                Math.toRadians(jointPID.getSetpoint().position), 
-                Math.toRadians(jointPID.getSetpoint().velocity)));
+
+        double outPut = 
+        jointPID.calculate(getOffsetEncValue(), jointSetpoint) 
+        +
+        jointFeedforward.calculate(
+            Math.toRadians(jointPID.getSetpoint().position), 
+            Math.toRadians(jointPID.getSetpoint().velocity));
+
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/outPut", outPut);
+
+        setJointVolts(outPut);
     }
 
     public void holdJoint() {

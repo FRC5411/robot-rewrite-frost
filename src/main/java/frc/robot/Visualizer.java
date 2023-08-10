@@ -180,6 +180,6 @@ public class Visualizer {
     public void updateArms(ArmPosition position) {
         m_arm.setAngle(new Rotation2d(Math.toRadians(position.getStage1OffsetAngle())));
         m_arm2.setAngle(new Rotation2d(Math.toRadians(position.getStage2OffsetAngle() - m_arm.getAngle())));
-        m_arm3.setAngle(new Rotation2d(Math.toRadians(position.getStage3OffsetAngle() - m_arm2.getAngle())));
+        m_arm3.setAngle(new Rotation2d(Math.toRadians(position.getStage3OffsetAngle() - m_arm2.getAngle()) - m_arm.getAngle()));
     }
 }
