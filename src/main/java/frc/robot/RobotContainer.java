@@ -57,19 +57,38 @@ public class RobotContainer {
     // // engageLimeLightBtn.onTrue(new InstantCommand(() -> m_swerve.PPmoveToPositionCommand().schedule()));
     // ControllerVars.engageAutobalanceBtn.whileTrue(robotDrive.autoBalanceCMD());
 
-    // ControllerVars.engageAutobalanceBtn.onTrue(armIntakeManager.setMode(GamePieces.Cone));
+
+    // INTAKE TESTINGS
+    ControllerVars.engageAutobalanceBtn.onTrue(armIntakeManager.setMode(GamePieces.Cube));
     // ControllerVars.engageAutobalanceBtn.onFalse(armIntakeManager.setMode(GamePieces.Cube));
 
     // ControllerVars.resetOdometryBtn.onTrue(new InstantCommand(() -> armIntakeManager.manualIntakeCommand().schedule()));
 
     // ControllerVars.engageLimeLightBtn.onTrue(new InstantCommand(() -> armIntakeManager.outTakeCommand().schedule()));
 
-    ControllerVars.substationPickupBtn.whileTrue(armIntakeManager.goToSubstation());
-    ControllerVars.substationPickupBtn.onFalse(
-      armIntakeManager.manualIntakeCommand().alongWith(armIntakeManager.goToIdle()));
+    // ARM TESTINGS
+    // ControllerVars.resetOdometryBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToHighScore()));
+    // ControllerVars.resetOdometryBtn.onFalse(armIntakeManager.goToIdle());
+    // ControllerVars.resetOdometryBtn.onFalse(armIntakeManager.manualIntakeCommand());
+
+    // ControllerVars.toggleRobotOrientBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToPickUpAlt()));
+    // ControllerVars.toggleRobotOrientBtn.onFalse(
+    //   armIntakeManager.manualIntakeCommand().alongWith(armIntakeManager.goToIdle()));
+
+    // ControllerVars.engageAutobalanceBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToMidScore()));
+    // ControllerVars.engageAutobalanceBtn.onFalse(armIntakeManager.manualIntakeCommand());
+    // ControllerVars.engageAutobalanceBtn.onFalse(armIntakeManager.goToIdle());
+
+    // ControllerVars.engageLimeLightBtn.onTrue(armIntakeManager.goToLowScore());
+    // ControllerVars.engageLimeLightBtn.onFalse(armIntakeManager.manualIntakeCommand());
+    // ControllerVars.engageLimeLightBtn.onFalse(armIntakeManager.goToIdle());
+
+    // ControllerVars.substationPickupBtn.whileTrue(armIntakeManager.goToSubstation());
+    // ControllerVars.substationPickupBtn.onFalse(
+    //   armIntakeManager.manualIntakeCommand().alongWith(armIntakeManager.goToIdle()));
     
-    ControllerVars.floorPickupBtn.whileTrue(armIntakeManager.goToPickup());
-    ControllerVars.floorPickupBtn.onFalse(armIntakeManager.manualIntakeCommand());
+    // ControllerVars.floorPickupBtn.whileTrue(armIntakeManager.goToPickup());
+    // ControllerVars.floorPickupBtn.onFalse(armIntakeManager.manualIntakeCommand());
 
     ControllerVars.scoreHighBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToHighScore()));
     ControllerVars.scoreHighBtn.onFalse(armIntakeManager.goToIdle());
