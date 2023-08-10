@@ -9,8 +9,6 @@ import frc.robot.systems.drive.DriveVars;
 import frc.robot.systems.intake.IntakeSubsystem;
 import frc.robot.systems.intake.IntakeVars.GamePieces;
 
-import java.lang.ModuleLayer.Controller;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.managers.ArmIntakeManager;
@@ -23,7 +21,9 @@ public class RobotContainer {
   IntakeSubsystem robotIntake;
   LedSubsytem LEDs;
 
-  ArmIntakeManager armIntakeManager;  
+  ArmIntakeManager armIntakeManager;
+
+  Visualizer visualizer;
 
   public RobotContainer() {
     robotDrive = new DriveSubsystem();
@@ -32,6 +32,8 @@ public class RobotContainer {
     LEDs = new LedSubsytem();
 
     armIntakeManager = new ArmIntakeManager(robotArm, robotIntake, LEDs);
+
+    visualizer = new Visualizer();
 
     robotDrive.setDefaultCommand(
         robotDrive.driveCMD(
