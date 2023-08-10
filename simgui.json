@@ -54,6 +54,9 @@
   },
   "NetworkTables": {
     "transitory": {
+      "Shuffleboard": {
+        "open": true
+      },
       "SmartDashboard": {
         "Arms": {
           "1.0": {

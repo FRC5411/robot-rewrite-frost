@@ -19,7 +19,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public Command manualIntakeCommand(GamePieces GP) {
-    return new InstantCommand(() -> IO.intake(GP), this);
+    return new InstantCommand(() -> IO.intake(GP), this).repeatedly().withTimeout(1.5);
   }
 
   public Command outTakeCommand(positions pos, GamePieces GP) {
@@ -30,12 +30,12 @@ public class IntakeSubsystem extends SubsystemBase {
         if ( pos == positions.ScoreLow) {
           IO.spinOut();  
         }
-        IO.spinOff();
+        IO.spinSlow();
         IO.openGrip();
       } else {
         IO.spinOut();
       }
-    });
+    }).repeatedly().withTimeout(1.5);
   }
 
   public Command setMode(GamePieces GP) {
@@ -66,10 +66,10 @@ public class IntakeSubsystem extends SubsystemBase {
                     case FloorAlt:
                     case FloorAltCube:
                     case Substation:
-                        return scheduleSpinSlow();
+                        return scheduleSpinSlow().repeatedly().withTimeout(1.5);
                     case Idle:
                     default:
-                        return schedulePickUp();
+                        return schedulePickUp().repeatedly().withTimeout(1.5);
       }
   }
 
@@ -85,6 +85,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public Command spinOffCommand() {
     return new InstantCommand(() -> IO.spinOff(), this);
+  }
+
+  public Command DEFspinSlowCommand() {
+    return new FunctionalCommand(
+      () -> {}, 
+      () -> IO.spinSlow(),
+      interrupted -> {}, 
+      () -> false, 
+      this);
   }
 
   @Override

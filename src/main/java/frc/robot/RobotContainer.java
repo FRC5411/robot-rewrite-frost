@@ -36,6 +36,8 @@ public class RobotContainer {
 
     visualizer = new Visualizer();
 
+    configureBindings();
+
     robotDrive.setDefaultCommand(
         robotDrive.driveCMD(
             () -> - deadzone(ControllerVars.xboxController.getLeftY()) * DriveVars.Constants.kMaxLinSpeedMeters,
@@ -46,7 +48,7 @@ public class RobotContainer {
 
     robotArm.setDefaultCommand(robotArm.moveToPositionCmd(() -> false));
 
-    configureBindings();
+    robotIntake.setDefaultCommand(robotIntake.DEFspinSlowCommand());
   }
 
   private void configureBindings() {
@@ -54,12 +56,13 @@ public class RobotContainer {
     // ControllerVars.toggleRobotOrientBtn.onTrue(robotDrive.toggleFieldCMD());
     // // engageLimeLightBtn.onTrue(new InstantCommand(() -> m_swerve.PPmoveToPositionCommand().schedule()));
     // ControllerVars.engageAutobalanceBtn.whileTrue(robotDrive.autoBalanceCMD());
-    ControllerVars.engageAutobalanceBtn.onTrue(armIntakeManager.setMode(GamePieces.Cone));
-    ControllerVars.engageAutobalanceBtn.onFalse(armIntakeManager.setMode(GamePieces.Cube));
 
-    ControllerVars.resetOdometryBtn.onTrue(new InstantCommand(() -> armIntakeManager.manualIntakeCommand().schedule()));
+    // ControllerVars.engageAutobalanceBtn.onTrue(armIntakeManager.setMode(GamePieces.Cone));
+    // ControllerVars.engageAutobalanceBtn.onFalse(armIntakeManager.setMode(GamePieces.Cube));
 
-    ControllerVars.engageLimeLightBtn.onTrue(armIntakeManager.outTakeCommand());
+    // ControllerVars.resetOdometryBtn.onTrue(new InstantCommand(() -> armIntakeManager.manualIntakeCommand().schedule()));
+
+    // ControllerVars.engageLimeLightBtn.onTrue(new InstantCommand(() -> armIntakeManager.outTakeCommand().schedule()));
 
     ControllerVars.substationPickupBtn.whileTrue(armIntakeManager.goToSubstation());
     ControllerVars.substationPickupBtn.onFalse(
