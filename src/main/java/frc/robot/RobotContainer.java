@@ -1,20 +1,37 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.systems.drive.DriveSubsystem;
 import frc.robot.systems.drive.DriveVars;
+import frc.robot.systems.intake.IntakeSubsystem;
+import frc.robot.systems.intake.IntakeVars.GamePieces;
+
+import java.lang.ModuleLayer.Controller;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.managers.ArmIntakeManager;
 import frc.robot.systems.arm.ArmSubsystem;
+import frc.robot.systems.leds.LedSubsytem;
 
 public class RobotContainer {
   DriveSubsystem robotDrive;
   ArmSubsystem robotArm;
+  IntakeSubsystem robotIntake;
+  LedSubsytem LEDs;
+
+  ArmIntakeManager armIntakeManager;  
 
   public RobotContainer() {
     robotDrive = new DriveSubsystem();
     robotArm = new ArmSubsystem();
+    robotIntake = new IntakeSubsystem();
+    LEDs = new LedSubsytem();
 
+    armIntakeManager = new ArmIntakeManager(robotArm, robotIntake, LEDs);
 
     robotDrive.setDefaultCommand(
         robotDrive.driveCMD(
@@ -34,6 +51,40 @@ public class RobotContainer {
     ControllerVars.toggleRobotOrientBtn.onTrue(robotDrive.toggleFieldCMD());
     // engageLimeLightBtn.onTrue(new InstantCommand(() -> m_swerve.PPmoveToPositionCommand().schedule()));
     ControllerVars.engageAutobalanceBtn.whileTrue(robotDrive.autoBalanceCMD());
+
+    ControllerVars.substationPickupBtn.whileTrue(armIntakeManager.goToSubstation());
+    ControllerVars.substationPickupBtn.onFalse(
+      armIntakeManager.manualIntakeCommand().alongWith(armIntakeManager.goToIdle()));
+    
+    ControllerVars.floorPickupBtn.whileTrue(armIntakeManager.goToPickup());
+    ControllerVars.floorPickupBtn.onFalse(armIntakeManager.manualIntakeCommand());
+
+    ControllerVars.scoreHighBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToHighScore()));
+    ControllerVars.scoreHighBtn.onFalse(armIntakeManager.goToIdle());
+    ControllerVars.scoreHighBtn.onFalse(armIntakeManager.manualIntakeCommand());
+
+    ControllerVars.altFloorPickupBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToPickUpAlt()));
+    ControllerVars.altFloorPickupBtn.onFalse(
+      armIntakeManager.manualIntakeCommand().alongWith(armIntakeManager.goToIdle()));
+
+    ControllerVars.scoreMidBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToMidScore()));
+    ControllerVars.scoreMidBtn.onFalse(armIntakeManager.manualIntakeCommand());
+    ControllerVars.scoreMidBtn.onFalse(armIntakeManager.goToIdle());
+
+    ControllerVars.scoreLowBtn.onTrue(armIntakeManager.goToLowScore());
+    ControllerVars.scoreLowBtn.onFalse(armIntakeManager.manualIntakeCommand());
+    ControllerVars.scoreLowBtn.onFalse(armIntakeManager.goToIdle());
+
+    ControllerVars.placeIdleBtn.onTrue(new SequentialCommandGroup(
+      armIntakeManager.outTakeCommand(),
+      new WaitCommand(0.25),
+      armIntakeManager.goToIdle()
+    ));
+    ControllerVars.placeIdleBtn.onFalse(getAutonomousCommand());
+    ControllerVars.placeIdleBtn.onFalse(robotIntake.spinOffCommand());
+
+    ControllerVars.coneModeBtn.onTrue(armIntakeManager.setMode(GamePieces.Cone));
+    ControllerVars.cubeModeBtn.onTrue(armIntakeManager.setMode(GamePieces.Cube));
   }
 
   public Command getAutonomousCommand() {

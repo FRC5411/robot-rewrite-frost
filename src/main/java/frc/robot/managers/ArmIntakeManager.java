@@ -1,4 +1,5 @@
 package frc.robot.managers;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -44,16 +45,30 @@ public class ArmIntakeManager {
         return intakeSubsystem.manualIntakeCommand(mGP);
     }
 
+    public Command detectIntakeCommand() {
+        return intakeSubsystem.detectIntakeCommand(
+            () -> intakeSubsystem.getIO().getSwitch(), 
+            () -> (mGP == GamePieces.Cone) || (mPos == positions.Substation) || (mPos == positions.FloorAlt) || (mPos == positions.Floor));
+    }
+
     public Command gotToPickUpAltCube() {
         return goToPosition(positions.FloorAltCube).andThen(setMode(mGP)).andThen(updateLEDs());
     }
 
     public Command goToPickUpAltCone() {
-        return goToPosition(positions.FloorAlt);
+        return goToPosition(positions.FloorAlt).andThen(setMode(mGP)).andThen(updateLEDs()).andThen(detectIntakeCommand());
+    }
+
+    public Command goToPickUpAlt() {
+        if(mGP == GamePieces.Cone) {
+            return goToPickUpAltCone();
+        } else {
+            return gotToPickUpAltCube();
+        }
     }
 
     public Command goToPickup() {
-        return goToPosition(positions.Floor);
+        return goToPosition(positions.Floor).andThen(detectIntakeCommand());
     }
 
     public Command goToLowScore() {
@@ -64,7 +79,7 @@ public class ArmIntakeManager {
         return goToPosition(positions.Idle);
     }
 
-    public Command goToMidScore(boolean cone) {
+    public Command goToMidScore() {
         if (mGP == GamePieces.Cone) {
             return goToPositionDip(positions.ScoreMidCone, 1.5, positions.DipMidCone);
         } else {
@@ -76,8 +91,8 @@ public class ArmIntakeManager {
         return goToPosition(positions.Substation);
     }
 
-    public Command goToHighCone(boolean cone) {
-        if (cone) {
+    public Command goToHighScore() {
+        if (mGP == GamePieces.Cone) {
             return goToPositionDip(positions.ScoreHighCone, 1.5, positions.DipHighCone);
         } else {
             return goToPosition(positions.ScoreHighCube);

@@ -16,7 +16,15 @@ public class ControllerVars {
     // BUTTON BOARD
     public static final Trigger substationPickupBtn = copilotController.button(0);
     public static final Trigger floorPickupBtn = copilotController.button(1);
-    public static final Trigger scorHighBtn = copilotController.button(2);
+    public static final Trigger scoreHighBtn = copilotController.button(2);
+    public static final Trigger altFloorPickupBtn = copilotController.button(3);
+    public static final Trigger scoreMidBtn = copilotController.button(4);
+    public static final Trigger scoreLowBtn = copilotController.button(5);
+    public static final Trigger placeIdleBtn = copilotController.button(6);
+    public static final Trigger coneModeBtn = copilotController.button(7);
+    public static final Trigger cubeModeBtn = copilotController.button(8);
+
+
     
     // ControllerVars.substationPickupBtn
     //     .whileTrue(m_arm.moveToPositionCommand(positions.Substation))

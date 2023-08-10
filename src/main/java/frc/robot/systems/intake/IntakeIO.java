@@ -49,6 +49,10 @@ public class IntakeIO {
     }
   }
 
+  public boolean getSwitch() {
+    return !Objects.IR_Sensor.get();
+  }
+
   public void setMode(GamePieces mode) {
     if(mode != GamePieces.Cone) {
       openGrip();

@@ -49,6 +49,10 @@ public class IntakeSubsystem extends SubsystemBase {
       this);
   }
 
+  public IntakeIO getIO() {
+    return IO;
+  }
+
   public Command commandChooser(positions position) {
         switch (position) {
                     case ScoreHighCone:
