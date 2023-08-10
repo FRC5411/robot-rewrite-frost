@@ -26,6 +26,18 @@ public class ArmPosition {
         return stage3Angle;
     }
 
+    public double getStage1OffsetAngle () {
+        return stage1Angle - Sets.stageOneJoint.kArmOffsetDeg;
+    }
+
+    public double getStage2OffsetAngle () {
+        return stage2Angle - Sets.stageTwoJoint.kArmOffsetDeg;
+    }
+
+    public double getStage3OffsetAngle () {
+        return stage3Angle - Sets.stageThreeJoint.kArmOffsetDeg;
+    }
+
     public double getXPosition() {
         return Sets.stageOneJoint.kArmLength * Math.cos(Math.toRadians(stage1Angle)) + Sets.stageTwoJoint.kArmLength * Math.cos(Math.toRadians(stage2Angle));
     }

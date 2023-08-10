@@ -6,6 +6,7 @@ package frc.robot.systems.arm;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.systems.arm.ArmVars.Sets;
+import frc.robot.systems.arm.ArmVars.Objects;
 
 /** Add your docs here. */
 public class ArmIO {
@@ -21,5 +22,11 @@ public class ArmIO {
         output[2] = (360 + stage3Rotation.getDegrees()) % 360;
     
         return output;
+    }
+
+    public void telemetry() {
+        Objects.jointStageOne.telemetry();
+        Objects.jointStageTwo.telemetry();
+        Objects.jointStageThree.telemetry();
     }
 }

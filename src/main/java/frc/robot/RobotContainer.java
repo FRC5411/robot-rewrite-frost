@@ -112,4 +112,12 @@ public class RobotContainer {
   public static String getAutonPath() {
     return RobotStates.sAutonPath;
   }
+
+  public ArmIntakeManager getArmIntakeManager() {
+    return armIntakeManager;
+  }
+
+  public Visualizer getVisualizer() {
+    return visualizer;
+  }
 }

@@ -21,12 +21,12 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    m_robotContainer.visualizer.updateGP(m_robotContainer.getArmIntakeManager().getGP());
+    m_robotContainer.visualizer.updateArms(m_robotContainer.getArmIntakeManager().getPos());
   }
 
   @Override
-  public void disabledInit() {
-    
-  }
+  public void disabledInit() {}
 
   @Override
   public void disabledPeriodic() {}

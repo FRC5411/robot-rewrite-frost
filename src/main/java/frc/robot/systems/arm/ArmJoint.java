@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.systems.arm.ArmVars.Constants;
 import frc.robot.systems.arm.ArmVars.Sets;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,8 +23,10 @@ public class ArmJoint {
     public ProfiledPIDController jointPID;
     public double jointSetpoint;
     public double jointOffsetDeg;
+    public int jointNum;
 
     public ArmJoint(int jointNum) {
+        this.jointNum = jointNum;
         initVars(jointNum); // Fetches variables from constants and sets it to this class' variables
         configureVars(); // Configures PID, FF, Motors, etc.
     }
@@ -130,5 +133,16 @@ public class ArmJoint {
     public boolean inDeadzone(double deadzone) {
         boolean inDeadzone = getError() <= deadzone;
         return inDeadzone;
+    }
+
+    public void telemetry() {
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Volts", jointMotor.get());
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Encoder", getEncoderValue());
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Error", getError());
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Setpoint", jointSetpoint);
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Offset Encoder", getOffsetEncValue());
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Offset Error", getOffsetEncValue() - jointSetpoint);
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Offset Setpoint", jointSetpoint - jointOffsetDeg);
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Voltage", jointMotor.get() * 12);
     }
 }

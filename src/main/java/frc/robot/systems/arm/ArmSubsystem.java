@@ -21,7 +21,11 @@ public class ArmSubsystem extends SubsystemBase {
 
     public positions mPos;
 
+    public ArmIO IO;
+
   public ArmSubsystem() {
+    IO = new ArmIO();
+
     armPositions.setPositionMap();
 
     joint1Deadzone = () -> {return Objects.jointStageOne.inDeadzone(ArmVars.Constants.kJointAngleDeadzone);};
@@ -70,5 +74,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+    IO.telemetry();
+  }
 }
