@@ -1,10 +1,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.systems.drive.DriveSubsystem;
 import frc.robot.systems.drive.DriveVars;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class RobotContainer {
@@ -13,6 +12,8 @@ public class RobotContainer {
   public RobotContainer() {
     robotDrive = new DriveSubsystem();
 
+    configureBindings();
+
     robotDrive.setDefaultCommand(
         robotDrive.driveCMD(
             () -> - deadzone(ControllerVars.xboxController.getLeftY()) * DriveVars.Constants.kMaxLinSpeedMeters,
@@ -20,15 +21,10 @@ public class RobotContainer {
             () -> - deadzone(ControllerVars.xboxController.getRightX()) * DriveVars.Constants.kMaxRotMeters,
             () -> RobotStates.sField
     ));
-
-    configureBindings();
   }
 
   private void configureBindings() {
-    ControllerVars.b.onTrue(robotDrive.instantdriveCMD(() -> 5.4, () -> 0, () -> 0, () -> false));
-    ControllerVars.b.onFalse(robotDrive.instantdriveCMD(() -> 0, () -> 0, () -> 0, () -> false));
-    ControllerVars.a.onTrue(robotDrive.instantdriveCMD(() -> 0, () -> 1, () -> 0, () -> false));
-    ControllerVars.a.onFalse(robotDrive.instantdriveCMD(() -> 0, () -> 0, () -> 0, () -> false));
+    ControllerVars.a.onTrue(new InstantCommand(() -> robotDrive.getIO().resetModules()));
   }
 
   public Command getAutonomousCommand() {
