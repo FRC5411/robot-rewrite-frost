@@ -5,6 +5,8 @@ import frc.robot.systems.arm.ArmVars.Sets;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.systems.arm.ArmVars.Sets.armPositions.positions;
 import frc.robot.systems.arm.ArmVars.Sets.armPositions;
@@ -38,11 +40,10 @@ public class ArmSubsystem extends SubsystemBase {
     mPos = positions.Idle;
   }
 
-  private void updateSetPoints (double stage1Angle, double stage2Angle, double stage3Angle) {    
-      manualTargetTheta = stage3Angle - Objects.jointStageThree.jointOffsetDeg;
-      Objects.jointStageOne.jointSetpoint = (stage1Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
-      Objects.jointStageTwo.jointSetpoint = (stage2Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
-      Objects.jointStageThree.jointSetpoint = (stage3Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
+  private void updateSetPoints (double stage1Angle, double stage2Angle, double stage3Angle) {
+      stage1Setpoint = (stage1Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
+      stage2Setpoint = (stage2Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
+      stage3Setpoint = (stage3Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
   }
 
   public Command updateSetPointsCMD(armPositions.positions position) {
@@ -56,7 +57,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   // The bool suppliers are not used currently, but they are there for future use
-  public Command moveToPositionCmd(BooleanSupplier goingToTuck) {
+  public Command moveToPositionCmd(DoubleSupplier stage1, DoubleSupplier stage2, DoubleSupplier stage3) {
     return new FunctionalCommand(
       () -> {
         Objects.jointStageOne.resetProfiles();
@@ -64,13 +65,25 @@ public class ArmSubsystem extends SubsystemBase {
         Objects.jointStageThree.resetProfiles();
       },
       () -> {
-        Objects.jointStageOne.executeControl(() -> true, goingToTuck);
-        Objects.jointStageTwo.executeControl(joint1Deadzone, goingToTuck);
-        Objects.jointStageThree.executeControl(joint2Deadzone, goingToTuck);
+        Objects.jointStageOne.executeControl(() -> stage1.getAsDouble());
+        Objects.jointStageTwo.executeControl(() -> stage2.getAsDouble());
+        Objects.jointStageThree.executeControl(() -> stage3.getAsDouble());
       },
       interrupted -> {},
       () -> false, 
       this); 
+  }
+
+  public double getStage1Setpoint() {
+    return stage1Setpoint;
+  }
+
+  public double getStage2Setpoint() {
+    return stage2Setpoint;
+  }
+
+  public double getStage3Setpoint() {
+    return stage3Setpoint;
   }
 
   @Override

@@ -49,7 +49,11 @@ public class RobotContainer {
             () -> RobotStates.sField
     ));
 
-    robotArm.setDefaultCommand(robotArm.moveToPositionCmd(() -> false));
+    robotArm.setDefaultCommand(
+      robotArm.moveToPositionCmd(
+        () -> robotArm.getStage1Setpoint(),
+        () -> robotArm.getStage2Setpoint(),
+        () -> robotArm.getStage3Setpoint()));
 
     robotIntake.setDefaultCommand(robotIntake.DEFspinSlowCommand());
   }

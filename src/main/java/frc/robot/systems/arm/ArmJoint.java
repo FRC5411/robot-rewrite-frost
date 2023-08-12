@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.systems.arm.ArmVars.Constants;
 import frc.robot.systems.arm.ArmVars.Sets;
 import edu.wpi.first.math.geometry.Rotation2d;
-import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 public class ArmJoint {
     private CANSparkMax jointMotor;
@@ -21,7 +21,6 @@ public class ArmJoint {
     private ArmFeedforward jointFeedforward;
     private double jointTolerance;
     public ProfiledPIDController jointPID;
-    public double jointSetpoint;
     public double jointOffsetDeg;
     public int jointNum;
 
@@ -90,10 +89,6 @@ public class ArmJoint {
         return getEncoderValue() - jointOffsetDeg;
     }
     
-    public double getArmErrorVal(){
-        return getEncoderValue() - jointSetpoint;
-    }
-    
 
     public Rotation2d getRotation() {
         return new Rotation2d(Math.toRadians(getEncoderValue()));
@@ -103,10 +98,10 @@ public class ArmJoint {
         return new Rotation2d(Math.toRadians(getOffsetEncValue()));
     }
 
-    public void runPIDVolts() {
+    public void runPIDVolts(double setpoint) {
 
         double outPut = 
-        jointPID.calculate(getOffsetEncValue(), jointSetpoint) 
+        jointPID.calculate(getOffsetEncValue(), setpoint) 
         +
         jointFeedforward.calculate(
             Math.toRadians(jointPID.getSetpoint().position), 
@@ -123,8 +118,8 @@ public class ArmJoint {
                 getOffsetEncValue(), 0));
     }
 
-    public void executeControl(BooleanSupplier angleDeadZone, BooleanSupplier goingTuck) {
-        runPIDVolts();
+    public void executeControl(DoubleSupplier setPointSupplier) {
+        runPIDVolts(setPointSupplier.getAsDouble());
     }
 
     public void resetProfiles(){
@@ -140,14 +135,17 @@ public class ArmJoint {
         return inDeadzone;
     }
 
+    public ProfiledPIDController getPID() {
+        return jointPID;
+    }
+
     public void telemetry() {
-        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Volts", jointMotor.get());
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/PercentOuptut", jointMotor.get());
         SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Encoder", getEncoderValue());
         SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Error", getError());
-        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Setpoint", jointSetpoint);
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Setpoint", jointPID.getSetpoint().position);
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Offset Encoder", jointPID.getGoal().position);
         SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Offset Encoder", getOffsetEncValue());
-        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Offset Error", getOffsetEncValue() - jointSetpoint);
-        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Offset Setpoint", jointSetpoint - jointOffsetDeg);
         SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Voltage", jointMotor.get() * 12);
     }
 }
