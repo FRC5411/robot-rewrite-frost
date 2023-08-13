@@ -137,7 +137,6 @@ public class ArmIntakeManager {
         return LEDs.turnOff();
     }
 
-
     ///// GETTERS \\\\\\
     public ArmPosition getPos() {
         SmartDashboard.putString("Pos", mPos.toString());

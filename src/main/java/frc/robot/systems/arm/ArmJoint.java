@@ -99,13 +99,13 @@ public class ArmJoint {
     }
 
     public void runPIDVolts(double setpoint) {
-
         double outPut = 
-        jointPID.calculate(getOffsetEncValue(), setpoint) 
-        +
-        jointFeedforward.calculate(
-            Math.toRadians(jointPID.getSetpoint().position), 
-            Math.toRadians(jointPID.getSetpoint().velocity));
+            jointPID.calculate(
+                getOffsetEncValue(), setpoint) 
+            +
+            jointFeedforward.calculate(
+                Math.toRadians(jointPID.getSetpoint().position), 
+                Math.toRadians(jointPID.getSetpoint().velocity));
 
         SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/outPut", outPut);
 

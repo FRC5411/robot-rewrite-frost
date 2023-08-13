@@ -21,8 +21,6 @@ public class ArmSubsystem extends SubsystemBase {
     double stage2Setpoint;
     double stage3Setpoint;
 
-    public positions mPos;
-
     public ArmIO IO;
 
   public ArmSubsystem() {
@@ -33,11 +31,11 @@ public class ArmSubsystem extends SubsystemBase {
     joint1Deadzone = () -> {return Objects.jointStageOne.inDeadzone(ArmVars.Constants.kJointAngleDeadzone);};
     joint2Deadzone = () -> {return Objects.jointStageTwo.inDeadzone(ArmVars.Constants.kJointAngleDeadzone);};
 
-    stage1Setpoint = Objects.jointStageOne.getOffsetEncValue();
-    stage2Setpoint = Objects.jointStageTwo.getOffsetEncValue();
-    stage3Setpoint = Objects.jointStageThree.getOffsetEncValue();
+    ArmPosition idle = armPositions.positionMap.get(positions.Idle);
 
-    mPos = positions.Idle;
+    stage1Setpoint = idle.getStage1OffsetAngle();
+    stage2Setpoint = idle.getStage2OffsetAngle();
+    stage3Setpoint = idle.getStage3OffsetAngle();
   }
 
   private void updateSetPoints (double stage1Angle, double stage2Angle, double stage3Angle) {
@@ -48,7 +46,6 @@ public class ArmSubsystem extends SubsystemBase {
 
   public Command updateSetPointsCMD(armPositions.positions position) {
       ArmPosition pos = armPositions.positionMap.get(position);
-      mPos = position;
       return updateSetPointsCMD(pos.getStage1Angle(), pos.getStage2Angle(), pos.getStage3Angle());
   }
 
