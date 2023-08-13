@@ -6,6 +6,7 @@ package frc.robot.systems.arm;
 
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -100,16 +101,18 @@ public class ArmJoint {
 
     public void runPIDVolts(double setpoint) {
         double outPut = 
-            jointPID.calculate(
+            12 * jointPID.calculate(
                 getOffsetEncValue(), setpoint) 
             +
             jointFeedforward.calculate(
                 Math.toRadians(jointPID.getSetpoint().position), 
                 Math.toRadians(jointPID.getSetpoint().velocity));
 
-        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/outPut", outPut);
+        double clampedOutPut = MathUtil.clamp(outPut, -12, 12);
 
-        setJointVolts(outPut);
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/outPut", clampedOutPut);
+
+        setJointVolts(MathUtil.clamp(clampedOutPut, -12, 12));
     }
 
     public void holdJoint() {
@@ -140,12 +143,12 @@ public class ArmJoint {
     }
 
     public void telemetry() {
-        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/PercentOuptut", jointMotor.get());
-        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Encoder", getEncoderValue());
-        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Error", getError());
-        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Setpoint", jointPID.getSetpoint().position);
-        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Offset Encoder", jointPID.getGoal().position);
-        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Offset Encoder", getOffsetEncValue());
         SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Voltage", jointMotor.get() * 12);
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/PercentOuptut", jointMotor.get());
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/OffsetDegrees", getOffsetEncValue());
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/EncoderDegrees", getEncoderValue());
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Error", getError());
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Goal", jointPID.getGoal().position);
+        SmartDashboard.putNumber("Arms/" + Double.toString(jointNum) + "/Setpoint", jointPID.getSetpoint().position);
     }
 }

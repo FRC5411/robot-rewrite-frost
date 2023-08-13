@@ -67,7 +67,8 @@
           },
           "3.0": {
             "open": true
-          }
+          },
+          "open": true
         },
         "Cone Visualizer": {
           "ArmPivot": {
