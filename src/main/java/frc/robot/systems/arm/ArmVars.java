@@ -44,7 +44,7 @@ public class ArmVars {
             public static final ArmFeedforward kArmFF = new ArmFeedforward(kS, kG, kV, kA);
             
             // PID
-            public static final double kP = 0.0450;
+            public static final double kP = 0.0450 / 12.0;//0.0450;
             public static final double kI = 0.0001;
             public static final double kD = 0.0003;
             public static final double kTolerance = 3;
@@ -69,14 +69,14 @@ public class ArmVars {
 
             // Feedforward
             public static final double kS = 0.025;
-            public static final double kG = 0.75;
+            public static final double kG = 0.6;///0.75;
             public static final double kV = 0.0;
             public static final double kA = 0.0;
 
             public static final ArmFeedforward kArmFF = new ArmFeedforward(kS, kG, kV, kA);
             
             // PID
-            public static final double kP = 0.0057;
+            public static final double kP = 2 * (0.0057 / 12.0);
             public static final double kI = 0;
             public static final double kD = 0.004;
             public static final double kTolerance = 5.0;
@@ -96,7 +96,7 @@ public class ArmVars {
             public static final CANSparkMax kArmMotor = REVConfigs.initNEOMotor(kArmID, false);
             public static final DutyCycleEncoder kArmEncoder = new DutyCycleEncoder(kEncoderID);
             
-            public static final double kArmOffsetDeg = 210.0;
+            public static final double kArmOffsetDeg = 108.0;
             public static final double kArmLength = 19.0; 
 
             // Feedforward

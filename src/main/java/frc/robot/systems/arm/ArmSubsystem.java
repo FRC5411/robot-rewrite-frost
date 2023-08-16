@@ -33,9 +33,9 @@ public class ArmSubsystem extends SubsystemBase {
 
     ArmPosition idle = armPositions.positionMap.get(positions.Idle);
 
-    stage1Setpoint = idle.getStage1OffsetAngle();
-    stage2Setpoint = idle.getStage2OffsetAngle();
-    stage3Setpoint = idle.getStage3OffsetAngle();
+    stage1Setpoint = 0.0;
+    stage2Setpoint = 5.0;
+    stage3Setpoint = 0.0;
   }
 
   private void updateSetPoints (double stage1Angle, double stage2Angle, double stage3Angle) {
@@ -62,9 +62,9 @@ public class ArmSubsystem extends SubsystemBase {
         Objects.jointStageThree.resetProfiles();
       },
       () -> {
-        Objects.jointStageOne.executeControl(() -> stage1.getAsDouble());
-        Objects.jointStageTwo.executeControl(() -> stage2.getAsDouble());
-        Objects.jointStageThree.executeControl(() -> stage3.getAsDouble());
+        // Objects.jointStageOne.executeControl(() -> stage1.getAsDouble(), 1);
+        // Objects.jointStageTwo.executeControl(() -> stage2.getAsDouble(), 1);
+        // Objects.jointStageThree.executeControl(() -> stage3.getAsDouble(), 1);
       },
       interrupted -> {},
       () -> false, 

@@ -20,6 +20,12 @@ public class REVConfigs {
         return motor;
     }
 
+    public static void NEO550(CANSparkMax motor, boolean invert) {
+        motor.restoreFactoryDefaults();
+        // motor.setIdleMode(IdleMode.kBrake);
+        motor.setInverted(invert);
+    }
+
     public static CANSparkMax initNEOMotor(int motorId, boolean isInverted) {
         CANSparkMax motor = new CANSparkMax(motorId, MotorType.kBrushless);
         

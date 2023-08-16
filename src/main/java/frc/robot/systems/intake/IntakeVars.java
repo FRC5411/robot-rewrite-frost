@@ -5,6 +5,8 @@
 package frc.robot.systems.intake;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import frc.robot.utils.REVConfigs;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -21,7 +23,7 @@ public class IntakeVars {
          public static final int kBackwardChannel = 15;
          public static final int kGripLeftID =  41;
          public static final int kGripRightID =  42;
-         public static final int kPCH_ID = 1;
+         public static final int kPCH_ID = 2;
          public static final int kIR_Sensor_ID = 1;
     }
 
@@ -33,8 +35,8 @@ public class IntakeVars {
 
     public static class Objects {
         public static DoubleSolenoid claw = new DoubleSolenoid(Constants.kPCH_ID, PneumaticsModuleType.REVPH, Constants.kForwardChannel, Constants.kBackwardChannel);
-        public static CANSparkMax spinnerLeft = REVConfigs.initNEO550Motor(Constants.kGripLeftID, false);
-        public static CANSparkMax spinnerRight = REVConfigs.initNEO550Motor(Constants.kGripRightID, false);
+        public static CANSparkMax spinnerLeft = new CANSparkMax(41, MotorType.kBrushless);//REVConfigs.initNEO550Motor(Constants.kGripLeftID, false);
+        public static CANSparkMax spinnerRight = new CANSparkMax(42, MotorType.kBrushless);// REVConfigs.initNEO550Motor(Constants.kGripRightID, false);
         public static DigitalInput IR_Sensor = new DigitalInput(Constants.kIR_Sensor_ID);
     }
 }

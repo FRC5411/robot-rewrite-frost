@@ -47,7 +47,7 @@ public class ArmJoint {
                 jointFeedforward = Sets.stageTwoJoint.kArmFF;
                 jointTolerance = Sets.stageTwoJoint.kTolerance;
                 jointPID = Sets.stageTwoJoint.kArmPID;
-                jointOffsetDeg = Sets.stageOneJoint.kArmOffsetDeg;
+                jointOffsetDeg = Sets.stageTwoJoint.kArmOffsetDeg;
                 break;
             
             case 3:
@@ -56,7 +56,7 @@ public class ArmJoint {
                 jointFeedforward = Sets.stageThreeJoint.kArmFF;
                 jointTolerance = Sets.stageThreeJoint.kTolerance;
                 jointPID = Sets.stageThreeJoint.kArmPID;
-                jointOffsetDeg = Sets.stageOneJoint.kArmOffsetDeg;
+                jointOffsetDeg = Sets.stageThreeJoint.kArmOffsetDeg;
                 break;
 
             default:
@@ -87,7 +87,11 @@ public class ArmJoint {
     }
 
     public double getOffsetEncValue(){
-        return getEncoderValue() - jointOffsetDeg;
+        double val = getEncoderValue() - jointOffsetDeg;
+        if(val < 0) {
+            val = 360 + val;
+        }
+        return val;
     }
     
 
@@ -99,14 +103,14 @@ public class ArmJoint {
         return new Rotation2d(Math.toRadians(getOffsetEncValue()));
     }
 
-    public void runPIDVolts(double setpoint) {
+    public void runPIDVolts(double setpoint, double invert) {
         double outPut = 
-            12 * jointPID.calculate(
-                getOffsetEncValue(), setpoint) 
+            (12 * jointPID.calculate(
+                getEncoderValue() - jointOffsetDeg, setpoint) 
             +
             jointFeedforward.calculate(
                 Math.toRadians(jointPID.getSetpoint().position), 
-                Math.toRadians(jointPID.getSetpoint().velocity));
+                Math.toRadians(jointPID.getSetpoint().velocity))) * Math.signum(invert);
 
         double clampedOutPut = MathUtil.clamp(outPut, -12, 12);
 
@@ -121,12 +125,12 @@ public class ArmJoint {
                 getOffsetEncValue(), 0));
     }
 
-    public void executeControl(DoubleSupplier setPointSupplier) {
-        runPIDVolts(setPointSupplier.getAsDouble());
+    public void executeControl(DoubleSupplier setPointSupplier, double invert) {
+        runPIDVolts(setPointSupplier.getAsDouble(), invert);
     }
 
     public void resetProfiles(){
-        jointPID.reset(getRotation().getDegrees());
+        jointPID.reset(getOffsetRotation().getDegrees());
     }
 
     public double getError() {

@@ -2,6 +2,7 @@ package frc.robot.systems.intake;
 import frc.robot.systems.intake.IntakeVars.Constants;
 import frc.robot.systems.intake.IntakeVars.GamePieces;
 import frc.robot.systems.intake.IntakeVars.Objects;
+import frc.robot.utils.REVConfigs;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -9,6 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class IntakeIO {
 
   public IntakeIO() {
+    REVConfigs.NEO550(IntakeVars.Objects.spinnerLeft, false);
+    REVConfigs.NEO550(IntakeVars.Objects.spinnerRight, true);
     follow();
   }
 

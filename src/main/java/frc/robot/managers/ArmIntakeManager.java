@@ -34,6 +34,7 @@ public class ArmIntakeManager {
     }
 
 
+    
     ///// ALL COMMANDS \\\\\\
     public Command setMode(GamePieces GP) {
         return new InstantCommand(() -> {
@@ -57,11 +58,11 @@ public class ArmIntakeManager {
     }
 
     public Command gotToPickUpAltCube() {
-        return goToPosition(positions.FloorAltCube).andThen(setMode(mGP)).andThen(updateLEDs());
+        return goToPosition(positions.FloorAltCube).andThen(updateLEDs());
     }
 
     public Command goToPickUpAltCone() {
-        return goToPosition(positions.FloorAlt).andThen(setMode(mGP)).andThen(updateLEDs()).andThen(detectIntakeCommand());
+        return goToPosition(positions.FloorAlt).andThen(updateLEDs()).andThen(detectIntakeCommand());
     }
 
     public Command goToPickUpAlt() {

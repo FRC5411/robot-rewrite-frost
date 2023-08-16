@@ -1,0 +1,25 @@
+{
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "Arms": {
+          "open": true
+        },
+        "open": true
+      },
+      "telemetry": {
+        "open": true
+      }
+    },
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Arm Setpoint Visualizer": "Mechanism2d",
+      "/SmartDashboard/Field2d": "Field2d",
+      "/SmartDashboard/GP Visualizer": "Mechanism2d"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT3)",
+    "serverTeam": "5411"
+  }
+}
