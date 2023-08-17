@@ -17,6 +17,10 @@ public class ArmVars {
         public static final double kJointIntegratorMin = -0.25;
         public static final double kJointIntegratorMax = 0.25;
         public static final int kJointCurrentLimitAmps = 40;
+
+        public static final double kXSpeed = 0.5;
+        public static final double kYSpeed = 0.5;
+        public static final double kThetaSpeed = 1;
     }
 
     public static class Objects {

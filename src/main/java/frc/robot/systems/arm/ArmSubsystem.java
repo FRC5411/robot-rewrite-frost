@@ -1,5 +1,6 @@
 package frc.robot.systems.arm;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.systems.arm.ArmVars.Constants;
 import frc.robot.systems.arm.ArmVars.Objects;
 import frc.robot.systems.arm.ArmVars.Sets;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -47,17 +48,25 @@ public class ArmSubsystem extends SubsystemBase {
   // The bool suppliers are not used currently, but they are there for future use
   public Command moveToPositionCmd(DoubleSupplier stage1, DoubleSupplier stage2, DoubleSupplier stage3) {
     return new FunctionalCommand(
+      () -> { resetAllProfiles(); },
       () -> {
-        resetAllProfiles();
-      },
-      () -> {
-        // Objects.jointStageOne.executeControl(() -> stage1.getAsDouble();
-        // Objects.jointStageTwo.executeControl(() -> stage2.getAsDouble();
-        // Objects.jointStageThree.executeControl(() -> stage3.getAsDouble();
+        Objects.jointStageOne.executeControl(() -> stage1.getAsDouble());
+        Objects.jointStageTwo.executeControl(() -> stage2.getAsDouble());
+        Objects.jointStageThree.executeControl(() -> stage3.getAsDouble());
       },
       interrupted -> {},
       () -> false, 
       this); 
+  }
+
+  public void manualUpdate(double x, double y, double theta) {
+      stage1Setpoint += x * Constants.kXSpeed;
+      stage2Setpoint += y * Constants.kYSpeed;
+      stage3Setpoint += theta * Constants.kThetaSpeed;
+
+      stage1Setpoint %= 360;
+      stage2Setpoint %= 360;
+      stage3Setpoint %= 360;
   }
 
   public double getStage1Setpoint() {
