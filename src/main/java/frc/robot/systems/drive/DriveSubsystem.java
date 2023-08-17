@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotContainer;
 import frc.robot.RobotStates;
 
@@ -15,9 +16,8 @@ public class DriveSubsystem extends SubsystemBase {
     public DriveSubsystem() {
         IO = new DriveIO();
 
-        // Timer.delay(1);
-
-        // IO.resetModules();
+        Timer.delay(1);
+        IO.resetModules();
     }
 
     public Command driveCMD(DoubleSupplier x, DoubleSupplier y, DoubleSupplier z, BooleanSupplier field) {

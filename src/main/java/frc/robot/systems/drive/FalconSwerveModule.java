@@ -1,4 +1,5 @@
 package frc.robot.systems.drive;
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
@@ -31,22 +32,22 @@ public class FalconSwerveModule implements SwerveModuleInterface {
             rot_encoder, offset);
 
         CTRESwerveConfigs.configDrive(
-            Constants.kDriveKp, Constants.kDriveKf, 
+            Constants.kDriveKp, Constants.kDriveKf,
             speed);
 
         CTRESwerveConfigs.configAzimuth(
             Constants.kAzimuthKp, Constants.kAzimuthKd, Constants.kAzimuthKf, Constants.kAzimuthDeadBand,
             rotation, rot_encoder);
         
-        Timer.delay(1);
-
-        resetToAbsolute();
-
         debugState = new SwerveModuleState();
 
         azmthCont = new PIDController(Constants.kAzimuthKp, 0, Constants.kAzimuthKd);
         azmthCont.enableContinuousInput(0, 360);
         azmthCont.setTolerance(0);
+
+        Timer.delay(1);
+
+        resetToAbsolute();
     }
 
     public FalconSwerveModule(WPI_TalonFX speed, WPI_TalonFX rotation, WPI_CANCoder encoder, double offset, boolean invert) {
@@ -55,8 +56,6 @@ public class FalconSwerveModule implements SwerveModuleInterface {
         rot_encoder = encoder;
 
         lastAngle = new Rotation2d();
-
-        Timer.delay(1);
 
         CTRESwerveConfigs.configDrive(
             Constants.kDriveKp, Constants.kDriveKf, 
@@ -143,9 +142,29 @@ public class FalconSwerveModule implements SwerveModuleInterface {
 
     @Override
     public void resetToAbsolute() {
+        waitForCanCoder();
         double rotation = getEncoder().getAbsolutePosition();
         m_rotation.setSelectedSensorPosition(Conversions.degreesToFalcon(rotation, DriveVars.Constants.kAzimuthGearRatio));
     }
+
+    private void waitForCanCoder(){
+        /*
+         * Wait for up to 1000 ms for a good CANcoder signal.
+         *
+         * This prevents a race condition during program startup
+         * where we try to synchronize the Falcon encoder to the
+         * CANcoder before we have received any position signal
+         * from the CANcoder.
+         */
+        for (int i = 0; i < 100; ++i) {
+            rot_encoder.getAbsolutePosition();
+            if (rot_encoder.getLastError() == ErrorCode.OK) {
+                break;
+            }
+            Timer.delay(0.010);
+        }
+    }
+
 
     @Override
     public void resetToZero() {
