@@ -8,7 +8,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.systems.drive.DriveVars;
-import frc.robot.systems.drive.DriveVars.Constants;
 import frc.robot.utils.SwerveModuleInterface;
 
 public class FalconModuleSim implements SwerveModuleInterface{
