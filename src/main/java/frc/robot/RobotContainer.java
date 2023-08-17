@@ -12,7 +12,7 @@ import frc.robot.systems.intake.IntakeSubsystem;
 import frc.robot.systems.intake.IntakeVars.GamePieces;
 
 import frc.robot.systems.arm.ArmSubsystem;
-
+import frc.robot.systems.arm.ArmVars.Sets.armPositions.positions;
 import frc.robot.systems.leds.LedSubsytem;
 
 import frc.robot.managers.ArmIntakeManager;
@@ -69,13 +69,13 @@ public class RobotContainer {
     // TODO: ADD MANUAL
     // REAL ARM TESTING BINDS
     // A
-    ControllerVars.resetOdometryBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToPickup().schedule()));
-    // B
-    ControllerVars.engageAutobalanceBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToMidScore().schedule()));
-    // X
-    ControllerVars.engageLimeLightBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToHighScore().schedule()));
-    // Y
-    ControllerVars.engageAutobalanceBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToIdle().schedule()));   
+    // ControllerVars.resetOdometryBtn.onTrue(robotArm.updateSetPointsCMD(positions.ScoreMidCone));
+    // // B
+    // ControllerVars.engageAutobalanceBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToMidScore().schedule()));
+    // // X
+    // ControllerVars.engageLimeLightBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToHighScore().schedule()));
+    // // Y
+    // ControllerVars.engageAutobalanceBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToIdle().schedule()));   
     
     // INTAKE TESTINGS
     // ControllerVars.resetOdometryBtn.onTrue(armIntakeManager.setMode(GamePieces.Cone));
@@ -102,12 +102,13 @@ public class RobotContainer {
     // ControllerVars.engageLimeLightBtn.onFalse(armIntakeManager.manualIntakeCommand());
     // ControllerVars.engageLimeLightBtn.onFalse(armIntakeManager.goToIdle());
 
-    // ControllerVars.substationPickupBtn.whileTrue(armIntakeManager.goToSubstation());
-    // ControllerVars.substationPickupBtn.onFalse(
-    //   armIntakeManager.manualIntakeCommand().alongWith(armIntakeManager.goToIdle()));
+    ControllerVars.substationPickupBtn.whileTrue(armIntakeManager.goToSubstation());
+    ControllerVars.substationPickupBtn.onFalse(
+      armIntakeManager.manualIntakeCommand().alongWith(armIntakeManager.goToIdle()));
     
-    // ControllerVars.floorPickupBtn.whileTrue(armIntakeManager.goToPickup());
-    // ControllerVars.floorPickupBtn.onFalse(armIntakeManager.manualIntakeCommand());
+    ControllerVars.floorPickupBtn.whileTrue(armIntakeManager.goToPickup());
+    ControllerVars.floorPickupBtn.onFalse(
+      armIntakeManager.manualIntakeCommand().andThen(armIntakeManager.goToIdle()));
 
     ControllerVars.scoreHighBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToHighScore().schedule()));
     ControllerVars.scoreHighBtn.onFalse(armIntakeManager.goToIdle());

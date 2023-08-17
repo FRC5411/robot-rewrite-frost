@@ -3,6 +3,7 @@ import frc.robot.systems.intake.IntakeVars.Constants;
 import frc.robot.systems.intake.IntakeVars.GamePieces;
 import frc.robot.systems.intake.IntakeVars.Objects;
 import frc.robot.utils.REVConfigs;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -12,7 +13,7 @@ public class IntakeIO {
   public IntakeIO() {
     REVConfigs.NEO550(IntakeVars.Objects.spinnerLeft, false);
     REVConfigs.NEO550(IntakeVars.Objects.spinnerRight, true);
-    follow();
+//    follow();
   }
 
   public void closeGrip() {
@@ -33,13 +34,16 @@ public class IntakeIO {
 
   public void spinSlow() {
     Objects.spinnerLeft.set(Constants.kSpeedIn / 4.0);
+    Objects.spinnerRight.set(Constants.kSpeedIn / 4.0);
   }
 
   public void spinIn() {
     Objects.spinnerLeft.set(Constants.kSpeedIn);
+    Objects.spinnerRight.set(Constants.kSpeedIn);
   }
 
   public void spinOut() {
+    Objects.spinnerLeft.set(Constants.kSpeedOut);
     Objects.spinnerLeft.set(Constants.kSpeedOut);
   }
 

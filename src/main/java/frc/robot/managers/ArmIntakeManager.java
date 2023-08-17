@@ -62,7 +62,7 @@ public class ArmIntakeManager {
     }
 
     public Command goToPickUpAltCone() {
-        return goToPosition(positions.FloorAlt).andThen(updateLEDs()).andThen(detectIntakeCommand());
+        return goToPosition(positions.FloorAlt).andThen(updateLEDs());
     }
 
     public Command goToPickUpAlt() {
@@ -74,7 +74,7 @@ public class ArmIntakeManager {
     }
 
     public Command goToPickup() {
-        return goToPosition(positions.Floor).andThen(detectIntakeCommand());
+        return goToPosition(positions.Floor);
     }
 
     public Command goToLowScore() {
@@ -87,7 +87,7 @@ public class ArmIntakeManager {
 
     public Command goToMidScore() {
         if (mGP == GamePieces.Cone) {
-            return goToPositionDip(positions.ScoreMidCone, 1.5, positions.DipMidCone);
+            return goToPositionDip(positions.ScoreMidCone, 1.25, positions.DipMidCone);
         } else {
             return goToPosition(positions.ScoreMidCube);
         }
@@ -99,7 +99,7 @@ public class ArmIntakeManager {
 
     public Command goToHighScore() {
         if (mGP == GamePieces.Cone) {
-            return goToPositionDip(positions.ScoreHighCone, 1.5, positions.DipHighCone);
+            return goToPositionDip(positions.ScoreHighCone, 1.0, positions.DipHighCone);
         } else {
             return goToPosition(positions.ScoreHighCube);
         }
@@ -122,11 +122,10 @@ public class ArmIntakeManager {
     }
 
     public Command upDateSystems() {
-        return new InstantCommand(() -> {
-            intakeSubsystem.commandChooser(mPos);
-            armSubsystem.resetAllProfiles();
-            armSubsystem.updateSetPointsCMD(mPos);
-        });
+        return new SequentialCommandGroup(
+            armSubsystem.updateSetPointsCMD(mPos),
+            intakeSubsystem.commandChooser(mPos)
+        );
     }
 
     public Command updateLEDs() {
