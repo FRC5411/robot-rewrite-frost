@@ -56,6 +56,8 @@ public class RobotContainer {
         () -> robotArm.getStage3Setpoint()));
 
     robotIntake.setDefaultCommand(robotIntake.DEFspinSlowCommand());
+
+    armIntakeManager.setMode(GamePieces.Cone).schedule();;
   }
 
   private void configureBindings() {
