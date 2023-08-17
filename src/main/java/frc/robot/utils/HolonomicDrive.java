@@ -48,7 +48,7 @@ public class HolonomicDrive {
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
 
         // Debug info on the module goals in speed and degrees(Not optimized)
-        for(int i = 0; i <= modules.length - 1; i++) {
+        for(int i = 0; i < modules.length; i++) {
             modules[i].setDesiredState(swerveModuleStates[i], isOpenLoop);
         }
     }    
@@ -70,7 +70,7 @@ public class HolonomicDrive {
         swerveModuleStates[2] = new SwerveModuleState(0, new Rotation2d(225));
         swerveModuleStates[3] = new SwerveModuleState(0, new Rotation2d(135));
 
-        for(int i = 0; i < modules.length - 1; i++) {
+        for(int i = 0; i < modules.length; i++) {
             modules[i].setDesiredState(swerveModuleStates[i], false);
         }
     }

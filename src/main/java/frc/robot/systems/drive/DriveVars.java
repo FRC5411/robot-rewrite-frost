@@ -9,6 +9,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.utils.SwerveUtils;
+import frc.robot.systems.drive.Simulation.FalconModuleSim;
 import frc.robot.utils.HolonomicDrive;
 import edu.wpi.first.math.controller.PIDController;
 
@@ -31,6 +32,7 @@ public final class DriveVars {
 
         public static final WPI_Pigeon2 gyro = new WPI_Pigeon2(Constants.kPigeonID, "drivetrain");
 
+        // TODO: TESTING A POTENTIAL FIX FOR FL
         public static final FalconSwerveModule TopLeft = new FalconSwerveModule(
             LeftFront, rLeftFront, LeftFrontEncoder, Constants.kFLEncOffset);
         public static final FalconSwerveModule TopRight = new FalconSwerveModule(
@@ -87,8 +89,8 @@ public final class DriveVars {
         public static final double kRotScaleFactor = 0.65;
 
         public static final double kAzimuthKp = 0.0105; //0.2;//0.0105;//0.0115//0.0125;//0.025 //0.05//0.1 //0.01 //0.0053 sds: 0.2; rylan: 0.65
-        public static final double kAzimuthKd = 0;//0.000265;//0.000275;//0.0003;//0.0004;//0.0005;//0.0006;//0.0006125;//0.0006125//0.000625//0.00065//0.0006;//0.00055//0.0005;//0.002//0.001//0.00075 //0.0005;//0.00025
-        public static final double kAzimuthKf = 0.000;//0.05;//0.05
+        public static final double kAzimuthKd = 0.000265;//0.000265;//0.000275;//0.0003;//0.0004;//0.0005;//0.0006;//0.0006125;//0.0006125//0.000625//0.00065//0.0006;//0.00055//0.0005;//0.002//0.001//0.00075 //0.0005;//0.00025
+        public static final double kAzimuthKf = 0.05;//0.05;//0.05
         public static final double kAzimuthDeadBand = 0.06;//0.1;//0.06;//0.075over slop;//0.1Over slop//0.05 under slop
 
         // calculated via JVN calculator

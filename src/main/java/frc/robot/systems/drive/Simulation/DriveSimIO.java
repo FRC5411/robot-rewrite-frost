@@ -1,6 +1,7 @@
-package frc.robot.systems.drive;
+package frc.robot.systems.drive.Simulation;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.systems.drive.DriveIOInterface;
 import frc.robot.systems.drive.DriveVars.Objects;
 import frc.robot.systems.drive.DriveVars.Simulation;
 import frc.robot.RobotStates;
@@ -94,7 +95,7 @@ public class DriveSimIO implements DriveIOInterface{
     }
 
     public void update() {
-        for(int i = 0; i < Simulation.modules.length - 1 ; i++) {
+        for(int i = 0; i < Simulation.modules.length ; i++) {
             Simulation.modules[i].update(0.2);
         }
 

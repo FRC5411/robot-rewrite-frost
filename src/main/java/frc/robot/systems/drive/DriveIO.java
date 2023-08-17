@@ -91,7 +91,7 @@ public class DriveIO implements DriveIOInterface{
     }
 
     public void moduleTelemetry() {
-        for(int i = 0; i <= Objects.modules.length - 1; i++) {
+        for(int i = 0; i < Objects.modules.length; i++) {
             Objects.modules[i].setTelemetry(i);
         }
 
@@ -120,5 +120,11 @@ public class DriveIO implements DriveIOInterface{
 
     public Command getAuton(String path, boolean useColor, Subsystem subsystem) {
         return Objects.swerveUtils.followPath(path, RobotStates.sEventMap, useColor, subsystem);
+    }
+
+    public void resetModules() {
+        for(int i = 0; i < 4; i++) {
+            Objects.modules[i].resetToAbsolute();
+        }
     }
 }

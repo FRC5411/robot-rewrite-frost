@@ -1,7 +1,10 @@
 package frc.robot.systems.drive;
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
@@ -15,7 +18,9 @@ public class FalconSwerveModule implements SwerveModuleInterface {
     private WPI_CANCoder rot_encoder;
     private SwerveModuleState debugState;
     private Rotation2d lastAngle;
+    private PIDController azmthCont;
 
+    // If offset changes don't work, then remove offsets from CANCoder, and use subtraction in the getAngleRads() method
     public FalconSwerveModule(WPI_TalonFX speed, WPI_TalonFX rotation, WPI_CANCoder encoder, double offset) {
         m_speed = speed;
         m_rotation = rotation;
@@ -23,11 +28,40 @@ public class FalconSwerveModule implements SwerveModuleInterface {
 
         lastAngle = new Rotation2d();
 
+        CTRESwerveConfigs.configPosition(
+            rot_encoder, offset);
+
+        CTRESwerveConfigs.configDrive(
+            Constants.kDriveKp, Constants.kDriveKf,
+            speed);
+
+        CTRESwerveConfigs.configAzimuth(
+            Constants.kAzimuthKp, Constants.kAzimuthKd, Constants.kAzimuthKf, Constants.kAzimuthDeadBand,
+            rotation, rot_encoder);
+        
+        debugState = new SwerveModuleState();
+
+        azmthCont = new PIDController(Constants.kAzimuthKp, 0, Constants.kAzimuthKd);
+        azmthCont.enableContinuousInput(0, 360);
+        azmthCont.setTolerance(0);
+
         Timer.delay(1);
+
+        resetToAbsolute();
+    }
+
+    public FalconSwerveModule(WPI_TalonFX speed, WPI_TalonFX rotation, WPI_CANCoder encoder, double offset, boolean invert) {
+        m_speed = speed;
+        m_rotation = rotation;
+        rot_encoder = encoder;
+
+        lastAngle = new Rotation2d();
 
         CTRESwerveConfigs.configDrive(
             Constants.kDriveKp, Constants.kDriveKf, 
             speed);
+
+            speed.setInverted(invert);
 
         CTRESwerveConfigs.configPosition(
             rot_encoder, offset);
@@ -37,6 +71,10 @@ public class FalconSwerveModule implements SwerveModuleInterface {
             rotation, rot_encoder);
 
         debugState = new SwerveModuleState();
+
+        azmthCont = new PIDController(Constants.kAzimuthKp, 0, Constants.kAzimuthKd);
+        azmthCont.enableContinuousInput(0, 360);
+        azmthCont.setTolerance(0);
     }
 
     @Override
@@ -104,8 +142,29 @@ public class FalconSwerveModule implements SwerveModuleInterface {
 
     @Override
     public void resetToAbsolute() {
-        rot_encoder.setPosition(0);
+        waitForCanCoder();
+        double rotation = getEncoder().getAbsolutePosition();
+        m_rotation.setSelectedSensorPosition(Conversions.degreesToFalcon(rotation, DriveVars.Constants.kAzimuthGearRatio));
     }
+
+    private void waitForCanCoder(){
+        /*
+         * Wait for up to 1000 ms for a good CANcoder signal.
+         *
+         * This prevents a race condition during program startup
+         * where we try to synchronize the Falcon encoder to the
+         * CANcoder before we have received any position signal
+         * from the CANcoder.
+         */
+        for (int i = 0; i < 100; ++i) {
+            rot_encoder.getAbsolutePosition();
+            if (rot_encoder.getLastError() == ErrorCode.OK) {
+                break;
+            }
+            Timer.delay(0.010);
+        }
+    }
+
 
     @Override
     public void resetToZero() {
@@ -113,9 +172,14 @@ public class FalconSwerveModule implements SwerveModuleInterface {
     }
 
     public void setDegrees(double angleDegrees) {
-        m_rotation.set(ControlMode.Position, 
-            Conversions.degreesToCANcoder(angleDegrees, 1));
+        m_rotation.set(ControlMode.PercentOutput, 
+        azmthCont.calculate(
+            Conversions.falconToDegrees(m_rotation.getSelectedSensorPosition(), 12.8) % 360,
+            angleDegrees) 
+        +
+        0.06 * Math.signum(azmthCont.getPositionError()));
     }
+    
 
     public SwerveModuleState getDesiredState() {
         return debugState;

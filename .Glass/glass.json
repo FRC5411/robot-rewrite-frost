@@ -11,8 +11,7 @@
               "open": true
             },
             "open": true
-          },
-          "open": true
+          }
         },
         "Arms": {
           "1.0": {
@@ -26,9 +25,29 @@
           },
           "open": true
         },
-        "open": true
+        "GP Visualizer": {
+          "open": true
+        },
+        "Module0": {
+          "open": true
+        },
+        "Module1": {
+          "open": true
+        },
+        "Module2": {
+          "open": true
+        },
+        "Module3": {
+          "open": true
+        }
       },
       "telemetry": {
+        "general": {
+          "autonomous": {
+            "open": true
+          },
+          "open": true
+        },
         "open": true
       }
     },
