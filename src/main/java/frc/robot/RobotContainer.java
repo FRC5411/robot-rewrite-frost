@@ -109,15 +109,15 @@ public class RobotContainer {
     // ControllerVars.floorPickupBtn.whileTrue(armIntakeManager.goToPickup());
     // ControllerVars.floorPickupBtn.onFalse(armIntakeManager.manualIntakeCommand());
 
-    ControllerVars.scoreHighBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToHighScore()));
+    ControllerVars.scoreHighBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToHighScore().schedule()));
     ControllerVars.scoreHighBtn.onFalse(armIntakeManager.goToIdle());
     ControllerVars.scoreHighBtn.onFalse(armIntakeManager.manualIntakeCommand());
 
-    ControllerVars.altFloorPickupBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToPickUpAlt()));
+    ControllerVars.altFloorPickupBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToPickUpAlt().schedule()));
     ControllerVars.altFloorPickupBtn.onFalse(
       armIntakeManager.manualIntakeCommand().alongWith(armIntakeManager.goToIdle()));
 
-    ControllerVars.scoreMidBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToMidScore()));
+    ControllerVars.scoreMidBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToMidScore().schedule()));
     ControllerVars.scoreMidBtn.onFalse(armIntakeManager.manualIntakeCommand());
     ControllerVars.scoreMidBtn.onFalse(armIntakeManager.goToIdle());
 

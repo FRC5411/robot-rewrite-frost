@@ -3,6 +3,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.systems.arm.ArmVars.Constants;
 import frc.robot.systems.arm.ArmVars.Objects;
 import frc.robot.systems.arm.ArmVars.Sets;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import java.util.function.DoubleSupplier;
@@ -32,8 +33,8 @@ public class ArmSubsystem extends SubsystemBase {
 
   private void updateSetPoints (double stage1Angle, double stage2Angle, double stage3Angle) {
       stage1Setpoint = (stage1Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
-      stage2Setpoint = (stage2Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
-      stage3Setpoint = (stage3Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
+      stage2Setpoint = (stage2Angle - Sets.stageTwoJoint.kArmOffsetDeg) % 360;
+      stage3Setpoint = (stage3Angle - Sets.stageThreeJoint.kArmOffsetDeg) % 360;
   }
 
   public Command updateSetPointsCMD(armPositions.positions position) {
@@ -90,5 +91,8 @@ public class ArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     IO.telemetry();
+    SmartDashboard.putNumber("Arms/Stage 1 Setpoint", stage1Setpoint);
+    SmartDashboard.putNumber("Arms/Stage 2 Setpoint", stage2Setpoint);
+    SmartDashboard.putNumber("Arms/Stage 3 Setpoint", stage3Setpoint);
   }
 }

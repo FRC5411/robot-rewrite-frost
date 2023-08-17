@@ -2,7 +2,28 @@
   "NetworkTables": {
     "transitory": {
       "SmartDashboard": {
+        "Arm Setpoint Visualizer": {
+          "ArmPivot": {
+            "Arm": {
+              "open": true
+            },
+            "ArmTower": {
+              "open": true
+            },
+            "open": true
+          },
+          "open": true
+        },
         "Arms": {
+          "1.0": {
+            "open": true
+          },
+          "2.0": {
+            "open": true
+          },
+          "3.0": {
+            "open": true
+          },
           "open": true
         },
         "open": true
@@ -16,6 +37,13 @@
       "/SmartDashboard/Arm Setpoint Visualizer": "Mechanism2d",
       "/SmartDashboard/Field2d": "Field2d",
       "/SmartDashboard/GP Visualizer": "Mechanism2d"
+    },
+    "windows": {
+      "/SmartDashboard/Arm Setpoint Visualizer": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables Settings": {
