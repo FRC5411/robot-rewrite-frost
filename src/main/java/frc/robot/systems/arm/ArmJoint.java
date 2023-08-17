@@ -103,14 +103,14 @@ public class ArmJoint {
         return new Rotation2d(Math.toRadians(getOffsetEncValue()));
     }
 
-    public void runPIDVolts(double setpoint, double invert) {
+    public void runPIDVolts(double setpoint) {
         double outPut = 
             (12 * jointPID.calculate(
                 getEncoderValue() - jointOffsetDeg, setpoint) 
             +
             jointFeedforward.calculate(
                 Math.toRadians(jointPID.getSetpoint().position), 
-                Math.toRadians(jointPID.getSetpoint().velocity))) * Math.signum(invert);
+                Math.toRadians(jointPID.getSetpoint().velocity)));
 
         double clampedOutPut = MathUtil.clamp(outPut, -12, 12);
 
@@ -125,8 +125,8 @@ public class ArmJoint {
                 getOffsetEncValue(), 0));
     }
 
-    public void executeControl(DoubleSupplier setPointSupplier, double invert) {
-        runPIDVolts(setPointSupplier.getAsDouble(), invert);
+    public void executeControl(DoubleSupplier setPointSupplier) {
+        runPIDVolts(setPointSupplier.getAsDouble());
     }
 
     public void resetProfiles(){

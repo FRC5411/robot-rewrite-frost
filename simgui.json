@@ -67,8 +67,7 @@
           },
           "3.0": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Cone Visualizer": {
           "ArmPivot": {
@@ -106,6 +105,9 @@
           }
         },
         "Intake": {
+          "open": true
+        },
+        "LED": {
           "open": true
         },
         "open": true

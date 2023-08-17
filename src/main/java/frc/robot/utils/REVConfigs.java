@@ -6,7 +6,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class REVConfigs {
 
-    // Falonc Swerve Drive motor Configs, the PID vals can be determined using sys id in drivetrain analysis
     public static CANSparkMax initNEO550Motor(int motorId, boolean invert) {
         CANSparkMax motor = new CANSparkMax(motorId, MotorType.kBrushless);
 
@@ -22,8 +21,13 @@ public class REVConfigs {
 
     public static void NEO550(CANSparkMax motor, boolean invert) {
         motor.restoreFactoryDefaults();
-        // motor.setIdleMode(IdleMode.kBrake);
+
+        motor.clearFaults();
+        motor.setIdleMode(IdleMode.kBrake);
         motor.setInverted(invert);
+        motor.setSmartCurrentLimit(20);
+
+        motor.burnFlash();
     }
 
     public static CANSparkMax initNEOMotor(int motorId, boolean isInverted) {

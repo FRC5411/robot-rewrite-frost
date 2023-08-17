@@ -16,6 +16,5 @@ public class LedVars {
     public static class Objects {
         public static AddressableLED ledStrip = new AddressableLED(1);
         public static AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(18);
-
     }
 }

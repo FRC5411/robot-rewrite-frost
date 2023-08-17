@@ -124,6 +124,7 @@ public class ArmIntakeManager {
     public Command upDateSystems() {
         return new InstantCommand(() -> {
             intakeSubsystem.commandChooser(mPos);
+            armSubsystem.resetAllProfiles();
             armSubsystem.updateSetPointsCMD(mPos);
         });
     }

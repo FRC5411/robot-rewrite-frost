@@ -1,5 +1,6 @@
 package frc.robot.systems.leds;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -20,13 +21,19 @@ public class LedSubsytem extends SubsystemBase{
     }
 
     public Command turnPurple () { return new InstantCommand( () -> {
-        IO.setColor((int)Math.floor(Color.kPurple.red*255), (int)Math.floor(Color.kPurple.green*255), (int)Math.floor(Color.kPurple.blue*255));
+        IO.setColor(
+          (int)Math.floor(Color.kPurple.red*255), 
+          (int)Math.floor(Color.kPurple.green*255), 
+          (int)Math.floor(Color.kPurple.blue*255));
       }); 
     }
 
 
       public Command turnYellow () { return new InstantCommand( () -> {
-        IO.setColor((int)Math.floor(Color.kOrange.red*255), (int)Math.floor(Color.kOrange.green*255), (int)Math.floor(Color.kOrange.blue*255));
+        IO.setColor(
+          (int)Math.floor(Color.kOrange.red*255), 
+          (int)Math.floor(Color.kOrange.green*255), 
+          (int)Math.floor(Color.kOrange.blue*255));
       }); 
     }
 
@@ -51,6 +58,8 @@ public class LedSubsytem extends SubsystemBase{
         for (var i = 0; i < Objects.ledBuffer.getLength(); i++) {
           Objects.ledBuffer.setRGB(i, Constants.k_r, Constants.k_g, Constants.k_b);
         }
+        
+        SmartDashboard.putString("LED/Color", Objects.ledBuffer.getLED(5).toString());
     
         Objects.ledStrip.setData(Objects.ledBuffer);
         Objects.ledStrip.start();

@@ -64,9 +64,19 @@ public class RobotContainer {
     // // engageLimeLightBtn.onTrue(new InstantCommand(() -> m_swerve.PPmoveToPositionCommand().schedule()));
     // ControllerVars.engageAutobalanceBtn.whileTrue(robotDrive.autoBalanceCMD());
 
-
+    // TODO: ADD MANUAL
+    // REAL ARM TESTING BINDS
+    // A
+    ControllerVars.resetOdometryBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToPickup().schedule()));
+    // B
+    ControllerVars.engageAutobalanceBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToMidScore().schedule()));
+    // X
+    ControllerVars.engageLimeLightBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToHighScore().schedule()));
+    // Y
+    ControllerVars.engageAutobalanceBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToIdle().schedule()));   
+    
     // INTAKE TESTINGS
-    ControllerVars.engageAutobalanceBtn.onTrue(armIntakeManager.setMode(GamePieces.Cube));
+    // ControllerVars.resetOdometryBtn.onTrue(armIntakeManager.setMode(GamePieces.Cone));
     // ControllerVars.engageAutobalanceBtn.onFalse(armIntakeManager.setMode(GamePieces.Cube));
 
     // ControllerVars.resetOdometryBtn.onTrue(new InstantCommand(() -> armIntakeManager.manualIntakeCommand().schedule()));

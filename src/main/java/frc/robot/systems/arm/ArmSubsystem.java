@@ -4,7 +4,6 @@ import frc.robot.systems.arm.ArmVars.Objects;
 import frc.robot.systems.arm.ArmVars.Sets;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -12,11 +11,6 @@ import frc.robot.systems.arm.ArmVars.Sets.armPositions.positions;
 import frc.robot.systems.arm.ArmVars.Sets.armPositions;
 
 public class ArmSubsystem extends SubsystemBase {
-    double manualTargetTheta;
-
-    BooleanSupplier joint1Deadzone;
-    BooleanSupplier joint2Deadzone;
-
     double stage1Setpoint;
     double stage2Setpoint;
     double stage3Setpoint;
@@ -27,9 +21,6 @@ public class ArmSubsystem extends SubsystemBase {
     IO = new ArmIO();
 
     armPositions.setPositionMap();
-
-    joint1Deadzone = () -> {return Objects.jointStageOne.inDeadzone(ArmVars.Constants.kJointAngleDeadzone);};
-    joint2Deadzone = () -> {return Objects.jointStageTwo.inDeadzone(ArmVars.Constants.kJointAngleDeadzone);};
 
     ArmPosition idle = armPositions.positionMap.get(positions.Idle);
 
@@ -57,14 +48,12 @@ public class ArmSubsystem extends SubsystemBase {
   public Command moveToPositionCmd(DoubleSupplier stage1, DoubleSupplier stage2, DoubleSupplier stage3) {
     return new FunctionalCommand(
       () -> {
-        Objects.jointStageOne.resetProfiles();
-        Objects.jointStageTwo.resetProfiles();
-        Objects.jointStageThree.resetProfiles();
+        resetAllProfiles();
       },
       () -> {
-        // Objects.jointStageOne.executeControl(() -> stage1.getAsDouble(), 1);
-        // Objects.jointStageTwo.executeControl(() -> stage2.getAsDouble(), 1);
-        // Objects.jointStageThree.executeControl(() -> stage3.getAsDouble(), 1);
+        // Objects.jointStageOne.executeControl(() -> stage1.getAsDouble();
+        // Objects.jointStageTwo.executeControl(() -> stage2.getAsDouble();
+        // Objects.jointStageThree.executeControl(() -> stage3.getAsDouble();
       },
       interrupted -> {},
       () -> false, 
@@ -81,6 +70,12 @@ public class ArmSubsystem extends SubsystemBase {
 
   public double getStage3Setpoint() {
     return stage3Setpoint;
+  }
+
+  public void resetAllProfiles() {
+    Objects.jointStageOne.resetProfiles();
+    Objects.jointStageTwo.resetProfiles();
+    Objects.jointStageThree.resetProfiles();
   }
 
   @Override

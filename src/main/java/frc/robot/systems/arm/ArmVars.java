@@ -139,10 +139,6 @@ public class ArmVars {
             IdleShootPosition
         };
 
-        public static final double STAGE_1_OFFSET = 203;
-        public static final double STAGE_2_OFFSET = 270;
-        public static final double STAGE_3_OFFSET = 210;
-
         public static ArmPosition scoreHighConePosition  = new ArmPosition(227, 262, 145);
         public static ArmPosition dipHighConePosition    = new ArmPosition(217, 226, 136);
         public static ArmPosition scoreHighCubePosition  = new ArmPosition(133.5, 328, 160);
