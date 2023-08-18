@@ -49,6 +49,7 @@ public class IntakeIO {
 
   public void spinOff() {
     Objects.spinnerLeft.set(0);
+    Objects.spinnerRight.set(0);
   } 
 
   public void intake(GamePieces GP) {

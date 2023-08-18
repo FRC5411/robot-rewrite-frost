@@ -44,7 +44,7 @@ public class RobotContainer {
     robotDrive.setDefaultCommand(
         robotDrive.driveCMD(
             () -> - deadzone(ControllerVars.xboxController.getLeftY()) * DriveVars.Constants.kMaxLinSpeedMeters,
-            () -> deadzone(ControllerVars.xboxController.getLeftX()) * DriveVars.Constants.kMaxLinSpeedMeters,
+            () -> - deadzone(ControllerVars.xboxController.getLeftX()) * DriveVars.Constants.kMaxLinSpeedMeters,
             () -> deadzone(ControllerVars.xboxController.getRightX()) * DriveVars.Constants.kMaxRotMeters,
             () -> RobotStates.sField
     ));
@@ -57,14 +57,16 @@ public class RobotContainer {
 
     robotIntake.setDefaultCommand(robotIntake.DEFspinSlowCommand());
 
-    armIntakeManager.setMode(GamePieces.Cone).schedule();;
+    armIntakeManager.setMode(GamePieces.Cone).schedule();
   }
 
   private void configureBindings() {
     // ControllerVars.resetOdometryBtn.onTrue(robotDrive.resetPoseCMD(new Pose2d())); // Reset odometry to current position
     // ControllerVars.toggleRobotOrientBtn.onTrue(robotDrive.toggleFieldCMD());
-    // // engageLimeLightBtn.onTrue(new InstantCommand(() -> m_swerve.PPmoveToPositionCommand().schedule()));
+    // engageLimeLightBtn.onTrue(new InstantCommand(() -> m_swerve.PPmoveToPositionCommand().schedule()));
     // ControllerVars.engageAutobalanceBtn.whileTrue(robotDrive.autoBalanceCMD());
+
+    ControllerVars.resetOdometryBtn.onTrue(new InstantCommand(() -> robotDrive.getIO().resetModules()));
 
     // TODO: ADD MANUAL
     // REAL ARM TESTING BINDS
@@ -168,5 +170,9 @@ public class RobotContainer {
 
   public Visualizer getVisualizer() {
     return visualizer;
+  }
+
+  public DriveSubsystem getDrive() {
+    return robotDrive;
   }
 }

@@ -26,9 +26,9 @@ public class ArmSubsystem extends SubsystemBase {
 
     ArmPosition idle = armPositions.positionMap.get(positions.Idle);
 
-    stage1Setpoint = 0.0;
-    stage2Setpoint = 5.0;
-    stage3Setpoint = 0.0;
+    stage1Setpoint = idle.getStage1OffsetAngle();
+    stage2Setpoint = idle.getStage2OffsetAngle();
+    stage3Setpoint = idle.getStage3OffsetAngle();
   }
 
   private void updateSetPoints (double stage1Angle, double stage2Angle, double stage3Angle) {
