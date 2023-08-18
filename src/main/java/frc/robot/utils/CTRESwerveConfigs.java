@@ -27,6 +27,18 @@ public class CTRESwerveConfigs {
         return driveMotor;
     }
 
+    public static WPI_TalonFX configDrive(int id, double kp, double kf) {
+      WPI_TalonFX driveMotor = new WPI_TalonFX(id);
+      configDrive(kp, kf, driveMotor);
+      return driveMotor;
+    }
+
+    public static WPI_TalonFX configAzimuth(int id, double kp, double kf, double kd, double deadband, CANCoder position) {
+      WPI_TalonFX azimuthMotor = new WPI_TalonFX(id);
+      configAzimuth(kp, kd, kf, deadband, azimuthMotor, position);
+      return azimuthMotor;
+    }
+
     // Cancoder most be configed first before the azimuth motor
     // Try using the 0.2 P first and see if it works since we are using the internal PID loop
     public static WPI_TalonFX configAzimuth (

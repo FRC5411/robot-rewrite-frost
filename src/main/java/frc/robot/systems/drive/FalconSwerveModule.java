@@ -50,6 +50,35 @@ public class FalconSwerveModule implements SwerveModuleInterface {
         resetToAbsolute();
     }
 
+    public FalconSwerveModule(WPI_TalonFX speed, WPI_TalonFX rotation, WPI_CANCoder encoder, double offset, double ks) {
+        m_speed = speed;
+        m_rotation = rotation;
+        rot_encoder = encoder;
+
+        lastAngle = new Rotation2d();
+
+        CTRESwerveConfigs.configPosition(
+            rot_encoder, offset);
+
+        CTRESwerveConfigs.configDrive(
+            ks, Constants.kDriveKf,
+            speed);
+
+        CTRESwerveConfigs.configAzimuth(
+            Constants.kAzimuthKp, Constants.kAzimuthKd, Constants.kAzimuthKf, Constants.kAzimuthDeadBand,
+            rotation, rot_encoder);
+        
+        debugState = new SwerveModuleState();
+
+        azmthCont = new PIDController(Constants.kAzimuthKp, 0, Constants.kAzimuthKd);
+        azmthCont.enableContinuousInput(0, 360);
+        azmthCont.setTolerance(0);
+
+        Timer.delay(1);
+
+        resetToAbsolute();
+    }
+
     public FalconSwerveModule(WPI_TalonFX speed, WPI_TalonFX rotation, WPI_CANCoder encoder, double offset, boolean invert) {
         m_speed = speed;
         m_rotation = rotation;

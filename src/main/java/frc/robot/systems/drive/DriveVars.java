@@ -15,6 +15,11 @@ import edu.wpi.first.math.controller.PIDController;
 
 public final class DriveVars {
     public static class Objects {
+        public static final WPI_CANCoder LeftFrontEncoder = new WPI_CANCoder(Constants.kFRCanCoderID, "drivetrain");
+        public static final WPI_CANCoder RightFrontEncoder = new WPI_CANCoder(Constants.kFRCanCoderID, "drivetrain");
+        public static final WPI_CANCoder LeftBackEncoder = new WPI_CANCoder(Constants.kBLCanCoderID, "drivetrain");
+        public static final WPI_CANCoder RightBackEncoder = new WPI_CANCoder(Constants.kBRCanCoderID, "drivetrain");
+
         public static final WPI_TalonFX LeftFront = new WPI_TalonFX(Constants.kFLDriveID, "drivetrain");
         public static final WPI_TalonFX RightFront = new WPI_TalonFX(Constants.kFRDriveID, "drivetrain");
         public static final WPI_TalonFX LeftBack = new WPI_TalonFX(Constants.kBLDriveID, "drivetrain");
@@ -25,16 +30,11 @@ public final class DriveVars {
         public static final WPI_TalonFX rLeftBack = new WPI_TalonFX(Constants.kBLAzimuthID, "drivetrain");
         public static final WPI_TalonFX rRightBack = new WPI_TalonFX(Constants.kBRAzimuthID, "drivetrain");
 
-        public static final WPI_CANCoder LeftFrontEncoder = new WPI_CANCoder(Constants.kFRCanCoderID, "drivetrain");
-        public static final WPI_CANCoder RightFrontEncoder = new WPI_CANCoder(Constants.kFRCanCoderID, "drivetrain");
-        public static final WPI_CANCoder LeftBackEncoder = new WPI_CANCoder(Constants.kBLCanCoderID, "drivetrain");
-        public static final WPI_CANCoder RightBackEncoder = new WPI_CANCoder(Constants.kBRCanCoderID, "drivetrain");
-
         public static final WPI_Pigeon2 gyro = new WPI_Pigeon2(Constants.kPigeonID, "drivetrain");
 
         // TODO: TESTING A POTENTIAL FIX FOR FL
         public static final FalconSwerveModule TopLeft = new FalconSwerveModule(
-            LeftFront, rLeftFront, LeftFrontEncoder, Constants.kFLEncOffset);
+            LeftFront, rLeftFront, LeftFrontEncoder, Constants.kFLEncOffset, 0);
         public static final FalconSwerveModule TopRight = new FalconSwerveModule(
             RightFront, rRightFront, RightFrontEncoder ,Constants.kFREncOffset);
         public static final FalconSwerveModule BottomLeft = new FalconSwerveModule(
