@@ -42,7 +42,6 @@ public class FalconSwerveModule implements SwerveModuleInterface {
         debugState = new SwerveModuleState();
 
         azmthCont = new PIDController(Constants.kAzimuthKp, 0, Constants.kAzimuthKd);
-        azmthCont.enableContinuousInput(0, 360);
         azmthCont.setTolerance(0);
 
         Timer.delay(1);

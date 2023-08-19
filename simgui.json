@@ -2,6 +2,7 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+<<<<<<< Updated upstream
       "/LiveWindow/ArmSubsystem": "Subsystem",
       "/LiveWindow/Ungrouped/DigitalInput[1]": "Digital Input",
       "/LiveWindow/Ungrouped/DigitalInput[7]": "Digital Input",
@@ -50,10 +51,14 @@
           "visible": true
         }
       }
+=======
+      "/SmartDashboard/Field2d": "Field2d"
+>>>>>>> Stashed changes
     }
   },
   "NetworkTables": {
     "transitory": {
+<<<<<<< Updated upstream
       "Shuffleboard": {
         "open": true
       },
@@ -108,6 +113,13 @@
           "open": true
         },
         "LED": {
+=======
+      "SmartDashboard": {
+        "Field2d": {
+          "open": true
+        },
+        "Module0": {
+>>>>>>> Stashed changes
           "open": true
         },
         "open": true

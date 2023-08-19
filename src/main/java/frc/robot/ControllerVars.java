@@ -23,4 +23,14 @@ public class ControllerVars {
     public static final Trigger placeIdleBtn = copilotController.button(6);
     public static final Trigger coneModeBtn = copilotController.button(7);
     public static final Trigger cubeModeBtn = copilotController.button(8);
+
+    public static double getInAndOut() {
+        if(copilotController.isButtonDown(14)) {
+            return 1;
+        }
+        if(copilotController.isButtonDown(15)) {
+            return -1;
+        }
+        return 0;
+    }
 }

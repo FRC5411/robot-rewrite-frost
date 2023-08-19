@@ -15,6 +15,11 @@ import edu.wpi.first.math.controller.PIDController;
 
 public final class DriveVars {
     public static class Objects {
+        public static final WPI_CANCoder LeftFrontEncoder = new WPI_CANCoder(Constants.kFLCanCoderID, "drivetrain");
+        public static final WPI_CANCoder RightFrontEncoder = new WPI_CANCoder(Constants.kFRCanCoderID, "drivetrain");
+        public static final WPI_CANCoder LeftBackEncoder = new WPI_CANCoder(Constants.kBLCanCoderID, "drivetrain");
+        public static final WPI_CANCoder RightBackEncoder = new WPI_CANCoder(Constants.kBRCanCoderID, "drivetrain");
+
         public static final WPI_TalonFX LeftFront = new WPI_TalonFX(Constants.kFLDriveID, "drivetrain");
         public static final WPI_TalonFX RightFront = new WPI_TalonFX(Constants.kFRDriveID, "drivetrain");
         public static final WPI_TalonFX LeftBack = new WPI_TalonFX(Constants.kBLDriveID, "drivetrain");
@@ -24,11 +29,6 @@ public final class DriveVars {
         public static final WPI_TalonFX rRightFront = new WPI_TalonFX(Constants.kFRAzimuthID, "drivetrain");
         public static final WPI_TalonFX rLeftBack = new WPI_TalonFX(Constants.kBLAzimuthID, "drivetrain");
         public static final WPI_TalonFX rRightBack = new WPI_TalonFX(Constants.kBRAzimuthID, "drivetrain");
-
-        public static final WPI_CANCoder LeftFrontEncoder = new WPI_CANCoder(Constants.kFRCanCoderID, "drivetrain");
-        public static final WPI_CANCoder RightFrontEncoder = new WPI_CANCoder(Constants.kFRCanCoderID, "drivetrain");
-        public static final WPI_CANCoder LeftBackEncoder = new WPI_CANCoder(Constants.kBLCanCoderID, "drivetrain");
-        public static final WPI_CANCoder RightBackEncoder = new WPI_CANCoder(Constants.kBRCanCoderID, "drivetrain");
 
         public static final WPI_Pigeon2 gyro = new WPI_Pigeon2(Constants.kPigeonID, "drivetrain");
 
@@ -84,7 +84,7 @@ public final class DriveVars {
         public static final double kBREncOffset = -257.783;
         
         public static final double kMaxLinSpeedMeters = 5.4;
-        public static final double kMaxRotMeters = Math.PI*2;
+        public static final double kMaxRotMeters = Math.PI * 2;
         public static final double kShwerveSpeedPercent = 0.1;
         public static final double kRotScaleFactor = 0.65;
 
@@ -118,15 +118,15 @@ public final class DriveVars {
         public static final int kBLAzimuthID = 23;
         public static final int kBRAzimuthID = 24;
 
-        public static final double kTranslationKp = 3.75;//3.25;//2.75;//2.5;//2.1;//2;//0.018;//0.03;//0.004 0.001
+        public static final double kTranslationKp = 0.2;//3.25;//2.75;//2.5;//2.1;//2;//0.018;//0.03;//0.004 0.001
         public static final double kTranslationKi = 0;
         public static final double kTranslationKd = 0;
 
-        public static final double kTranslationTolerance = 0;
+        public static final double kTranslationTolerance = 0.2;
         public static final double KTranslationILower = 0;
         public static final double kTranslationIUpper = 0;
 
-        public static final double kRotationKp = 6.25;//12.5;//15;//0.00005
+        public static final double kRotationKp = 0.008;//12.5;//15;//0.00005
         public static final double kRotationKi = 0;
         public static final double kRotationKd = 0;
 

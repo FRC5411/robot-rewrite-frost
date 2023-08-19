@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.systems.arm.ArmVars.Constants;
 import frc.robot.systems.arm.ArmVars.Sets;
 import edu.wpi.first.math.geometry.Rotation2d;
+
 import java.util.function.DoubleSupplier;
 
 public class ArmJoint {
@@ -144,6 +145,10 @@ public class ArmJoint {
 
     public ProfiledPIDController getPID() {
         return jointPID;
+    }
+
+    public boolean isAtGoal(){
+        return jointPID.atGoal();
     }
 
     public void telemetry() {

@@ -55,36 +55,25 @@ public class IntakeSubsystem extends SubsystemBase {
     return IO;
   }
 
-  public Command commandChooser(positions position) {
-        switch (position) {
-                    case ScoreHighCone:
-                    case ScoreHighCube:
-                    case ScoreMidCone:
-                    case ScoreMidCube:
-                    case ScoreLow:
-                    case Floor:
-                    case FloorAlt:
-                    case FloorAltCube:
-                    case Substation:
-                        return scheduleSpinSlow().repeatedly().withTimeout(1.5);
-                    case Idle:
-                    default:
-                        return schedulePickUp().repeatedly().withTimeout(1.5);
-      }
-  }
-
-  public Command scheduleSpinSlow() {
-    Command defCommand = new InstantCommand(() -> IO.spinSlow());
-    return defCommand;
-  }
-
-  public Command schedulePickUp() {
-    Command command = new InstantCommand(() -> {IO.spinIn(); IO.openGrip();});
-    return command;
+  public void setNewIntakePos(positions position) {
+    if(position != positions.Idle){
+      IO.openGrip();
+      IO.spinIn(); 
+    } else {
+      IO.spinSlow();
+    }
   }
 
   public Command spinOffCommand() {
     return new InstantCommand(() -> IO.spinOff(), this);
+  }
+
+  public Command spinOutCommand() {
+    return new InstantCommand(() -> IO.spinOut(), this);
+  }
+
+  public Command toggleCMD() {
+    return new InstantCommand(() -> IO.toggle());
   }
 
   public Command DEFspinSlowCommand() {

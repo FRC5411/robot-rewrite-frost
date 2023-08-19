@@ -48,9 +48,9 @@ public class ArmVars {
             public static final ArmFeedforward kArmFF = new ArmFeedforward(kS, kG, kV, kA);
             
             // PID
-            public static final double kP = 0.0450 / 12.0;//0.0450;
+            public static final double kP = 0.0450;//0.0450;
             public static final double kI = 0.0001;
-            public static final double kD = 0.0003;
+            public static final double kD = 0.0002;
             public static final double kTolerance = 3;
             public static final double kMaxVelocity = 800;
             public static final double kMaxAccleration = 220;
@@ -80,7 +80,7 @@ public class ArmVars {
             public static final ArmFeedforward kArmFF = new ArmFeedforward(kS, kG, kV, kA);
             
             // PID
-            public static final double kP = 2 * (0.0057 / 12.0);
+            public static final double kP = (0.0057);
             public static final double kI = 0;
             public static final double kD = 0.004;
             public static final double kTolerance = 5.0;
@@ -148,8 +148,8 @@ public class ArmVars {
         public static ArmPosition scoreHighCubePosition  = new ArmPosition(133.5, 328, 160);
         public static ArmPosition scoreMidConePosition   = new ArmPosition(133.5, 306, 139);
         public static ArmPosition dipMidConePosition     = new ArmPosition(133.5, 282, 139);
-        public static ArmPosition scoreMidCubePosition   = new ArmPosition(133.5, 344, 110);
         public static ArmPosition idlePosition           = new ArmPosition(133.5, 354, 39);
+        public static ArmPosition scoreMidCubePosition   = new ArmPosition(133.5, 344, 110);
         public static ArmPosition scoreLowPosition       = new ArmPosition(133.5, 317, 55);
         public static ArmPosition floorPosition          = new ArmPosition(133.5, 232, 141);
         public static ArmPosition floorAltPosition       = new ArmPosition(133.5, 260, 38);

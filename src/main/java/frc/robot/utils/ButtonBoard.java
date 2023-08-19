@@ -29,7 +29,7 @@ public class ButtonBoard {
             : rightBoard.getHID().getRawButton(buttonNumber - 8);
     }
 
-    private double getAxis ( int axisNumber ) {
+    public double getAxis ( int axisNumber ) {
         if( Math.abs(rightBoard.getRawAxis(axisNumber)) < 0.5 ) return 0;
         return rightBoard.getRawAxis(axisNumber);
     }

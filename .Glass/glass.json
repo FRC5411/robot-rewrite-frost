@@ -22,11 +22,7 @@
           },
           "3.0": {
             "open": true
-          },
-          "open": true
-        },
-        "GP Visualizer": {
-          "open": true
+          }
         },
         "Module0": {
           "open": true
@@ -39,14 +35,14 @@
         },
         "Module3": {
           "open": true
-        }
+        },
+        "open": true
       },
       "telemetry": {
         "general": {
           "autonomous": {
             "open": true
-          },
-          "open": true
+          }
         },
         "open": true
       }
@@ -59,6 +55,11 @@
     },
     "windows": {
       "/SmartDashboard/Arm Setpoint Visualizer": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/GP Visualizer": {
         "window": {
           "visible": true
         }

@@ -45,7 +45,7 @@ public class RobotContainer {
         robotDrive.driveCMD(
             () -> - deadzone(ControllerVars.xboxController.getLeftY()) * DriveVars.Constants.kMaxLinSpeedMeters,
             () -> - deadzone(ControllerVars.xboxController.getLeftX()) * DriveVars.Constants.kMaxLinSpeedMeters,
-            () -> deadzone(ControllerVars.xboxController.getRightX()) * DriveVars.Constants.kMaxRotMeters,
+            () -> - deadzone(ControllerVars.xboxController.getRightX()) * DriveVars.Constants.kMaxRotMeters,
             () -> RobotStates.sField
     ));
 
@@ -55,7 +55,7 @@ public class RobotContainer {
         () -> robotArm.getStage2Setpoint(),
         () -> robotArm.getStage3Setpoint()));
 
-    robotIntake.setDefaultCommand(robotIntake.DEFspinSlowCommand());
+    // robotIntake.setDefaultCommand(robotIntake.DEFspinSlowCommand());
 
     armIntakeManager.setMode(GamePieces.Cone).schedule();
   }
@@ -77,7 +77,7 @@ public class RobotContainer {
     // // X
     // ControllerVars.engageLimeLightBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToHighScore().schedule()));
     // // Y
-    // ControllerVars.engageAutobalanceBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToIdle().schedule()));   
+    // ControllerVars.engageAutobalanceBtn.onTrue(new InstantCommand(() -> new InstantCommand(armIntakeManager.scheduleDefaultCMD()).schedule()));   
     
     // INTAKE TESTINGS
     // ControllerVars.resetOdometryBtn.onTrue(armIntakeManager.setMode(GamePieces.Cone));
@@ -89,58 +89,84 @@ public class RobotContainer {
 
     // ARM TESTINGS
     // ControllerVars.resetOdometryBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToHighScore()));
-    // ControllerVars.resetOdometryBtn.onFalse(armIntakeManager.goToIdle());
+    // ControllerVars.resetOdometryBtn.onFalse(new InstantCommand(armIntakeManager.scheduleDefaultCMD()));
     // ControllerVars.resetOdometryBtn.onFalse(armIntakeManager.manualIntakeCommand());
 
     // ControllerVars.toggleRobotOrientBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToPickUpAlt()));
     // ControllerVars.toggleRobotOrientBtn.onFalse(
-    //   armIntakeManager.manualIntakeCommand().alongWith(armIntakeManager.goToIdle()));
+    //   armIntakeManager.manualIntakeCommand().alongWith(new InstantCommand(armIntakeManager.scheduleDefaultCMD())));
 
     // ControllerVars.engageAutobalanceBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToMidScore()));
     // ControllerVars.engageAutobalanceBtn.onFalse(armIntakeManager.manualIntakeCommand());
-    // ControllerVars.engageAutobalanceBtn.onFalse(armIntakeManager.goToIdle());
+    // ControllerVars.engageAutobalanceBtn.onFalse(new InstantCommand(armIntakeManager.scheduleDefaultCMD()));
 
     // ControllerVars.engageLimeLightBtn.onTrue(armIntakeManager.goToLowScore());
     // ControllerVars.engageLimeLightBtn.onFalse(armIntakeManager.manualIntakeCommand());
-    // ControllerVars.engageLimeLightBtn.onFalse(armIntakeManager.goToIdle());
+    // ControllerVars.engageLimeLightBtn.onFalse(new InstantCommand(armIntakeManager.scheduleDefaultCMD()));
 
-    ControllerVars.substationPickupBtn.whileTrue(armIntakeManager.goToSubstation());
+    ControllerVars.substationPickupBtn.whileTrue(
+      armIntakeManager.goToSubstation().andThen(
+        new InstantCommand(() -> {
+          if(armIntakeManager.getGP() == GamePieces.Cone) armIntakeManager.detectIntakeCommand().schedule();
+          else armIntakeManager.manualIntakeCommand().schedule();})));
     ControllerVars.substationPickupBtn.onFalse(
-      armIntakeManager.manualIntakeCommand().alongWith(armIntakeManager.goToIdle()));
+      armIntakeManager.manualIntakeCommand().alongWith(new InstantCommand(() -> armIntakeManager.scheduleDefaultCMD(false))));
     
-    ControllerVars.floorPickupBtn.whileTrue(armIntakeManager.goToPickup());
+    ControllerVars.floorPickupBtn.whileTrue(armIntakeManager.goToPickup().andThen(
+      new InstantCommand(() -> {
+        if(armIntakeManager.getGP() == GamePieces.Cone) armIntakeManager.detectIntakeCommand().schedule();
+        else armIntakeManager.manualIntakeCommand().schedule();})));
     ControllerVars.floorPickupBtn.onFalse(
-      armIntakeManager.manualIntakeCommand().andThen(armIntakeManager.goToIdle()));
+      armIntakeManager.manualIntakeCommand().alongWith(new InstantCommand(() -> armIntakeManager.scheduleDefaultCMD(false))));
 
     ControllerVars.scoreHighBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToHighScore().schedule()));
-    ControllerVars.scoreHighBtn.onFalse(armIntakeManager.goToIdle());
-    ControllerVars.scoreHighBtn.onFalse(armIntakeManager.manualIntakeCommand());
+    ControllerVars.scoreHighBtn.onFalse(new InstantCommand(() -> armIntakeManager.scheduleDefaultCMD(true)));
+    // ControllerVars.scoreHighBtn.onFalse(armIntakeManager.manualIntakeCommand());
 
-    ControllerVars.altFloorPickupBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToPickUpAlt().schedule()));
-    ControllerVars.altFloorPickupBtn.onFalse(
-      armIntakeManager.manualIntakeCommand().alongWith(armIntakeManager.goToIdle()));
+    ControllerVars.altFloorPickupBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToPickUpAlt().schedule()).andThen(
+      new InstantCommand(() -> {
+        if(armIntakeManager.getGP() == GamePieces.Cone) armIntakeManager.detectIntakeCommand().schedule();
+        else armIntakeManager.manualIntakeCommand().schedule();})));
+    ControllerVars.altFloorPickupBtn.onFalse(new InstantCommand(() -> armIntakeManager.scheduleDefaultCMD(false)));
 
     ControllerVars.scoreMidBtn.onTrue(new InstantCommand(() -> armIntakeManager.goToMidScore().schedule()));
     ControllerVars.scoreMidBtn.onFalse(armIntakeManager.manualIntakeCommand());
-    ControllerVars.scoreMidBtn.onFalse(armIntakeManager.goToIdle());
+    ControllerVars.scoreMidBtn.onFalse(new InstantCommand(() -> armIntakeManager.scheduleDefaultCMD(true)));
 
     ControllerVars.scoreLowBtn.onTrue(armIntakeManager.goToLowScore());
     ControllerVars.scoreLowBtn.onFalse(armIntakeManager.manualIntakeCommand());
-    ControllerVars.scoreLowBtn.onFalse(armIntakeManager.goToIdle());
+    ControllerVars.scoreLowBtn.onFalse(new InstantCommand(() -> armIntakeManager.scheduleDefaultCMD(false)));
 
-    ControllerVars.placeIdleBtn.onTrue(new SequentialCommandGroup(
-      armIntakeManager.outTakeCommand(),
-      new WaitCommand(0.25),
-      armIntakeManager.goToIdle()
-    ));
-    ControllerVars.placeIdleBtn.onFalse(getAutonomousCommand());
-    ControllerVars.placeIdleBtn.onFalse(robotIntake.spinOffCommand());
+    ControllerVars.placeIdleBtn
+      .onTrue(armIntakeManager.outTakeCommand());
+      // .onFalse(robotIntake.spinOffCommand());
 
-    ControllerVars.coneModeBtn.onTrue(armIntakeManager.setMode(GamePieces.Cone));
-    ControllerVars.cubeModeBtn.onTrue(armIntakeManager.setMode(GamePieces.Cube));
+    ControllerVars.coneModeBtn.onTrue(new InstantCommand(() -> armIntakeManager.setMode(GamePieces.Cube).schedule()));
+    ControllerVars.cubeModeBtn.onTrue(new InstantCommand(() -> armIntakeManager.setMode(GamePieces.Cube).schedule()));
+
+    // ControllerVars.copilotController.button(12).onTrue(new InstantCommand( () -> {
+    //   if (ControllerVars.copilotController.isButtonDown(9)) {
+    //     robotIntake.toggleCMD(); 
+    //   }
+    // }));
+    // ControllerVars.copilotController.button(14).whileTrue(new InstantCommand( () -> {
+    //   if (ControllerVars.copilotController.isButtonDown(9)) {
+    //     robotIntake.spinOffCommand();
+    //   }
+    // }));
+    // ControllerVars.copilotController.button(14).onFalse(new InstantCommand( () -> {
+    //   if (ControllerVars.copilotController.isButtonDown(9)) 
+    //   robotIntake.spinOff();
+    // }));
+    // ControllerVars.copilotController.button(13).whileTrue(new InstantCommand( () -> {
+    //   if (ControllerVars.copilotController.isButtonDown(9)) {
+    //     robotIntake.spinIn();
+    //   }
+    // }));
+    // ControllerVars.copilotController.button(13).onFalse(new InstantCommand( () -> {if (ControllerVars.copilotController.isButtonDown(9)) m_claw.spinOff();}));
   }
 
-  public Command getAutonomousCommand() {
+  public Command  getAutonomousCommand() {
     return robotDrive.getAuton();
   }
 

@@ -1,5 +1,6 @@
 package frc.robot.systems.arm;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.ControllerVars;
 import frc.robot.systems.arm.ArmVars.Constants;
 import frc.robot.systems.arm.ArmVars.Objects;
 import frc.robot.systems.arm.ArmVars.Sets;
@@ -31,19 +32,32 @@ public class ArmSubsystem extends SubsystemBase {
     stage3Setpoint = idle.getStage3OffsetAngle();
   }
 
-  private void updateSetPoints (double stage1Angle, double stage2Angle, double stage3Angle) {
+  // Update sp based on input, seperate from other updatesp because of manual mode
+  public void updateSetPoints (double stage1Angle, double stage2Angle, double stage3Angle, boolean isIdle) {
       stage1Setpoint = (stage1Angle - Sets.stageOneJoint.kArmOffsetDeg) % 360;
       stage2Setpoint = (stage2Angle - Sets.stageTwoJoint.kArmOffsetDeg) % 360;
-      stage3Setpoint = (stage3Angle - Sets.stageThreeJoint.kArmOffsetDeg) % 360;
+      if(!isIdle) stage3Setpoint = (stage3Angle - Sets.stageThreeJoint.kArmOffsetDeg) % 360;
   }
 
-  public Command updateSetPointsCMD(armPositions.positions position) {
-      ArmPosition pos = armPositions.positionMap.get(position);
-      return updateSetPointsCMD(pos.getStage1Angle(), pos.getStage2Angle(), pos.getStage3Angle());
+  // Normal update setpoints for bb positions
+  public void updateSetpoints (positions position, boolean isIdle) {
+    ArmPosition pos = armPositions.positionMap.get(position);
+    updateSetPoints(pos.getStage1Angle(), pos.getStage2Angle(), pos.getStage3Angle(), isIdle);
   }
 
-  public Command updateSetPointsCMD(double x, double y, double z) {
-      return new InstantCommand(() -> updateSetPoints(x, y, z));
+  // Used to check if 3rd joint can be returned to idle after dip movement
+  public boolean areFirstJointsAtSetpoint() {
+    return Objects.jointStageTwo.isAtGoal() && Objects.jointStageThree.isAtGoal();
+  }
+
+
+  public boolean getJointDeadzone() {
+    return 
+      (Objects.jointStageOne.getPID().getPositionError() <= 15)
+      &&
+      (Objects.jointStageTwo.getPID().getPositionError() <= 15);
+
+
   }
 
   // The bool suppliers are not used currently, but they are there for future use
@@ -68,6 +82,17 @@ public class ArmSubsystem extends SubsystemBase {
       stage1Setpoint %= 360;
       stage2Setpoint %= 360;
       stage3Setpoint %= 360;
+  }
+
+  public Command manualUpdateCMD(double x, double y, double theta) {
+      return new InstantCommand(() -> manualUpdate(x, y, theta));
+  }
+
+  public Command moveOnManualCmd() {
+    return manualUpdateCMD(
+      ControllerVars.copilotController.getAxis(1),
+      ControllerVars.copilotController.getAxis(0),
+      ControllerVars.getInAndOut());
   }
 
   public double getStage1Setpoint() {
