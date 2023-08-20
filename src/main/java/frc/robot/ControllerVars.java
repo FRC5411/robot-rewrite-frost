@@ -21,8 +21,8 @@ public class ControllerVars {
     public static final Trigger scoreMidBtn = copilotController.button(4);
     public static final Trigger scoreLowBtn = copilotController.button(5);
     public static final Trigger placeIdleBtn = copilotController.button(6);
-    public static final Trigger coneModeBtn = copilotController.button(7);
-    public static final Trigger cubeModeBtn = copilotController.button(8);
+    public static final Trigger cubeModeBtn = copilotController.button(7);
+    public static final Trigger coneModeBtn = copilotController.button(8);
 
     public static double getInAndOut() {
         if(copilotController.isButtonDown(14)) {

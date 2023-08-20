@@ -3,8 +3,10 @@ package frc.robot.systems.intake;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.systems.arm.ArmVars.Sets.armPositions.positions;
 import frc.robot.systems.intake.IntakeVars.GamePieces;
@@ -42,13 +44,24 @@ public class IntakeSubsystem extends SubsystemBase {
     return new InstantCommand(() -> IO.setMode(GP));
   }
 
-  public Command detectIntakeCommand(BooleanSupplier detect, BooleanSupplier end) {
+  public Command detectIntakeCommand(GamePieces GP, BooleanSupplier detect, BooleanSupplier end) {
     return new FunctionalCommand(
       () -> {},
-      () -> {if(detect.getAsBoolean()) {IO.closeGrip();}}, 
+      () -> {
+        if(detect.getAsBoolean()) {
+          IO.intake(GP);
+        }}, 
       (interrupted) -> {}, 
       detect, 
       this);
+  }
+
+  public Command intakeCommand(GamePieces GP, BooleanSupplier detect, BooleanSupplier end) {
+    return new ScheduleCommand(
+        detectIntakeCommand(
+          GP, 
+          detect, 
+          end));
   }
 
   public IntakeIO getIO() {
@@ -56,11 +69,30 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setNewIntakePos(positions position) {
-    if(position != positions.Idle){
-      IO.openGrip();
-      IO.spinIn(); 
-    } else {
-      IO.spinSlow();
+    switch (position) {
+        case DipHighCone:
+        case ScoreHighCone:
+        case ScoreHighCube:
+        case DipMidCone:
+        case ScoreMidCone:
+        case ScoreMidCube:
+        case ScoreLow:
+            break;
+        case Floor:
+        case FloorAlt:
+        case Substation:
+            IO.openGrip();
+            IO.spinIn();
+        break;
+        case Idle:
+            IO.spinSlow();
+        break;
+        case IdleShootPosition:
+            IO.spinOut();
+        break;
+        default:
+            IO.spinSlow();
+        break;
     }
   }
 

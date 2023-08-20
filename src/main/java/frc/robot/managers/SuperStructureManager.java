@@ -2,9 +2,8 @@ package frc.robot.managers;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -20,7 +19,7 @@ import frc.robot.systems.leds.LedSubsytem;
 import frc.robot.ControllerVars;
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class ArmIntakeManager {
+public class SuperStructureManager {
     ArmSubsystem armSubsystem;
     IntakeSubsystem intakeSubsystem;
     LedSubsytem LEDs;
@@ -28,7 +27,7 @@ public class ArmIntakeManager {
     positions mPos;
     GamePieces mGP;
 
-    public ArmIntakeManager (ArmSubsystem armSubsystem, IntakeSubsystem intakeSubsystem, LedSubsytem LEDs) {
+    public SuperStructureManager (ArmSubsystem armSubsystem, IntakeSubsystem intakeSubsystem, LedSubsytem LEDs) {
         this.armSubsystem = armSubsystem;
         this.intakeSubsystem = intakeSubsystem;
         this.LEDs = LEDs;
@@ -37,24 +36,29 @@ public class ArmIntakeManager {
         mGP = GamePieces.Cone;
     }
 
-
-    public void scheduleDefaultCMD(boolean isDip) {
-        if(ControllerVars.copilotController.isButtonDown(9)) {
-          armSubsystem.manualUpdateCMD(0, 0, 0).schedule();
-        } else {
-          if(DriverStation.isAutonomous()) return;
-          
-          if(isDip) goToIdleDip().schedule();
-          else goToIdle().schedule();
-        }
-      }
-
     
-    ///// ALL COMMANDS \\\\\\
+    ///// LED COMMANDS \\\\\\
+    public Command scheduleMode(GamePieces GP) {
+        return new ScheduleCommand(setMode(GP));
+    }
+
     public Command setMode(GamePieces GP) {
         return new InstantCommand(() -> {
             mGP = GP;
         }).alongWith(updateLEDs());
+    }
+
+    ///// INTAKE COMMANDS \\\\\
+    public Command scheduleOuttake() {
+        return new ScheduleCommand(outTakeCommand());
+    }
+
+    public Command scheduleManualIntake() {
+        return new ScheduleCommand(manualIntakeCommand());
+    }
+
+    public Command scheduleDetectIntake() {
+        return new ScheduleCommand(detectIntakeCommand());
     }
 
     public Command outTakeCommand() {
@@ -67,34 +71,70 @@ public class ArmIntakeManager {
 
     public Command detectIntakeCommand() {
         return intakeSubsystem.detectIntakeCommand(
+            mGP,
             () -> intakeSubsystem.getIO().getSwitch(), 
-            () -> (mGP == GamePieces.Cone) || (mPos == positions.Substation) || (mPos == positions.FloorAlt) || (mPos == positions.Floor));
+            () -> (mPos == positions.Substation) || (mPos == positions.FloorAlt) || (mPos == positions.Floor));
     }
 
+    ///// ARM COMMANDS \\\\\
+    // Scheduler Commands
+    public void scheduleDefaultCMD(boolean isDip) {
+        if(ControllerVars.copilotController.isButtonDown(9)) {
+          armSubsystem.manualUpdateCMD(0, 0, 0).schedule();
+        } else {
+          if(DriverStation.isAutonomous()) return;
+          
+          if(isDip) goToIdleDip().schedule();
+          else goToIdle().schedule();
+        }
+    }
+
+    public Command schedulePickup() {
+        return new ScheduleCommand(goToPickup());
+    }
+
+    public Command schedulePickupAlt() {
+        return new ScheduleCommand(gotToPickUpAltCube());
+    }
+
+    public Command schedulePickupAltCone() {
+        return new ScheduleCommand(goToPickUpAltCone());
+    }
+
+    public Command scheduleSubstation() {
+        return new ScheduleCommand(goToSubstation());
+    }
+
+    public Command scheduleLowScore() {
+        return new ScheduleCommand(goToLowScore());
+    }
+
+    public Command scheduleMidScore() {
+        return new ScheduleCommand(goToMidScore());
+    }
+
+    public Command scheduleHighScore() {
+        return new ScheduleCommand(goToHighScore());
+    }
+
+    // Pickup Commands
     public Command gotToPickUpAltCube() {
-        return goToPosition(positions.FloorAltCube).andThen(updateLEDs());
+        return goToPosition(positions.FloorAltCube);
     }
 
     public Command goToPickUpAltCone() {
-        return goToPosition(positions.FloorAlt).andThen(updateLEDs());
-    }
-
-    public Command goToPickUpAlt() {
-        if(mGP == GamePieces.Cone) {
-            return goToPickUpAltCone();
-        } else {
-            return gotToPickUpAltCube();
-        }
+        return goToPosition(positions.FloorAlt);
     }
 
     public Command goToPickup() {
         return goToPosition(positions.Floor);
     }
 
-    public Command goToLowScore() {
-            return goToPosition(positions.ScoreLow);
+    public Command goToSubstation() {
+        return goToPosition(positions.Substation);
     }
 
+    // Idle Commands
     public Command goToIdle() {
         return goToPosition(positions.Idle);
     }
@@ -110,16 +150,17 @@ public class ArmIntakeManager {
         return armCmd;
     }
 
+    // Score Commands
+    public Command goToLowScore() {
+        return goToPosition(positions.ScoreLow);
+    }
+
     public Command goToMidScore() {
         if (mGP == GamePieces.Cone) {
             return goToPositionDip(positions.ScoreMidCone, 0.6, positions.DipMidCone);
         } else {
             return goToPosition(positions.ScoreMidCube);
         }
-    }
-
-    public Command goToSubstation() {
-        return goToPosition(positions.Substation);
     }
 
     public Command goToHighScore() {
@@ -149,17 +190,7 @@ public class ArmIntakeManager {
         return new InstantCommand(
             () -> {
                 armSubsystem.updateSetpoints(selectedPos, false);
-                if(selectedPos == positions.FloorAlt || selectedPos == positions.Floor || selectedPos == positions.Substation)
-                    intakeSubsystem.setNewIntakePos(idle);
-            }
-        );
-    }
-
-    public Command closeIntake(){
-        return new InstantCommand(
-            () -> {
-                if(mGP == GamePieces.Cone)
-                intakeSubsystem.getIO().closeGrip();
+                intakeSubsystem.setNewIntakePos(idle);
             }
         );
     }
@@ -171,7 +202,16 @@ public class ArmIntakeManager {
                 armSubsystem.updateSetpoints(selectedPos, true);
             }
         );
-    }   
+    } 
+
+    public Command closeIntake(){
+        return new InstantCommand(
+            () -> {
+                if(mGP == GamePieces.Cone)
+                intakeSubsystem.getIO().closeGrip();
+            }
+        );
+    }  
 
     public Command updateLEDs() {
         if(mGP == GamePieces.Cube) {
